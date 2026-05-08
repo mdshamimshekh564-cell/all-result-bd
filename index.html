@@ -645,7 +645,29 @@
       await loadConfig();
       if (localStorage.getItem('gpaDarkMode')==='true' && adminConfig.enableDarkMode) { document.body.classList.add('dark'); document.getElementById('darkModeBtn').innerHTML='<i class="fas fa-sun"></i>'; }
       const lc = localStorage.getItem('lastClassType')||'ssc'; classTypeSelect.value=lc; handleClassChange(); loadHistory();
-      setInterval(async()=>{ try{const doc=await db.collection('adminConfig').doc('globalConfig').get(); if(doc.exists){const nc={...DEFAULT_CONFIG,...doc.data()}; if(JSON.stringify(nc)!==JSON.stringify(adminConfig)){adminConfig=nc;applyConfig();handleClassChange();}} }catch(e){} },30000);
+
+      // ==== FIX: Auto-config refresh WITHOUT resetting subject inputs ====
+      setInterval(async() => {
+        try {
+          const doc = await db.collection('adminConfig').doc('globalConfig').get();
+          if (doc.exists) {
+            const firebaseData = doc.data();
+            const newConfig = { ...DEFAULT_CONFIG, ...firebaseData };
+            // classSubjects-এর ডিপ মার্জ (প্রথম লোডের মতোই)
+            if (firebaseData.classSubjects) {
+              newConfig.classSubjects = { ...DEFAULT_CONFIG.classSubjects, ...firebaseData.classSubjects };
+            } else {
+              newConfig.classSubjects = { ...DEFAULT_CONFIG.classSubjects };
+            }
+            // এখন তুলনা করলে আর মিথ্যা পার্থক্য হবে না
+            if (JSON.stringify(newConfig) !== JSON.stringify(adminConfig)) {
+              adminConfig = newConfig;
+              applyConfig();
+              handleClassChange();
+            }
+          }
+        } catch(e) {}
+      }, 30000);
     }
     init();
   </script>
