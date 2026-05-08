@@ -227,7 +227,7 @@
     <div class="info-section">
       <h2><i class="fas fa-calculator"></i> GPA ক্যালকুলেটর কী?</h2>
       <p><strong>GPA (Grade Point Average)</strong> হলো শিক্ষার্থীদের একাডেমিক পারফরম্যান্স পরিমাপের একটি আন্তর্জাতিক পদ্ধতি। বাংলাদেশে PSC, JSC, SSC, HSC, অনার্স ও মাস্টার্স পরীক্ষার ফলাফল GPA পদ্ধতিতে প্রকাশ করা হয়।</p>
-      <p>আমাদের <strong>GPA Calculator BD</strong> টুলটি বাংলাদেশের জাতীয় শিক্ষাক্রম অনুযায়ী ডিজাইন করা হয়েছে, যা আপনাকে সহজেই আপনার পরীক্ষার ফলাফল GPA-তে রূপান্তর করতে সাহায্য করে।</p>
+      <p>আমাদের <strong>All Result BD</strong> টুলটি বাংলাদেশের জাতীয় শিক্ষাক্রম অনুযায়ী ডিজাইন করা হয়েছে, যা আপনাকে সহজেই আপনার পরীক্ষার ফলাফল GPA-তে রূপান্তর করতে সাহায্য করে।</p>
       <h3>বৈশিষ্ট্যসমূহ:</h3>
       <ul>
         <li>✅ অপশনাল সাবজেক্টের বোনাস পয়েন্ট স্বয়ংক্রিয়ভাবে যোগ হয়</li>
@@ -281,7 +281,7 @@
     </footer>
   </div>
 
-  <!-- Modals -->
+  <!-- Modals (unchanged) -->
   <div class="modal-overlay" id="privacyModal">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('privacyModal')">&times;</button>
@@ -556,14 +556,90 @@
     function renderHistoryFromArray(h) {
       historyContainer.innerHTML='';
       if (h.length===0) { historyContainer.innerHTML='<p style="text-align:center;">কোনো রেজাল্ট নেই</p>'; return; }
-      h.forEach(item=>{ const d=document.createElement('div'); d.className='history-item'; d.innerHTML=`<div style="flex:1;"><div class="student-info"><i class="fas fa-user"></i> ${item.studentName||''}</div><small>রোল:${item.studentRoll||'-'} | রেজি:${item.studentReg||'-'}</small><div><strong>GPA:${item.gpa}</strong> (${item.grade}) ${item.className||''}</div><small>${item.date||''}</small></div><button class="delete-history-btn" onclick="deleteHistoryItem('${item.id}')">🗑</button>`; historyContainer.appendChild(d); });
+      h.forEach(item=>{
+        const d = document.createElement('div');
+        d.className = 'history-item';
+        d.innerHTML = `
+          <div style="flex:1;">
+            <div class="student-info"><i class="fas fa-user"></i> ${item.studentName||''}</div>
+            <small>রোল:${item.studentRoll||'-'} | রেজি:${item.studentReg||'-'}</small>
+            <div><strong>GPA:${item.gpa}</strong> (${item.grade}) ${item.className||''}</div>
+            <small>${item.date||''}</small>
+          </div>
+          <button class="delete-history-btn" onclick="deleteHistoryItem('${item.id}')" title="রেজাল্ট মুছুন">🗑</button>
+        `;
+        historyContainer.appendChild(d);
+      });
     }
 
-    window.deleteHistoryItem = async function(id) { try { await db.collection('results').doc(id).delete(); } catch(e) { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); const i=h.findIndex(x=>x.uniqueId===id); if(i!==-1) h.splice(i,1); localStorage.setItem('gpaHistoryBD',JSON.stringify(h)); } loadHistory(); };
-    window.clearHistory = async function() { if(!confirm('মুছবেন?')) return; try { const snap=await db.collection('results').get(); const batch=db.batch(); snap.forEach(d=>batch.delete(d.ref)); await batch.commit(); } catch(e){} localStorage.removeItem('gpaHistoryBD'); loadHistory(); };
+    // ================== DELETE FUNCTIONS (with confirmation) ==================
+    window.deleteHistoryItem = function(id) {
+      if (!confirm('আপনি কি নিশ্চিত যে এই রেজাল্টটি মুছে ফেলতে চান?')) return;
+      db.collection('results').doc(id).delete()
+        .then(() => {
+          loadHistory();
+        })
+        .catch(e => {
+          // Fallback to local storage
+          const h = JSON.parse(localStorage.getItem('gpaHistoryBD') || '[]');
+          const idx = h.findIndex(item => item.uniqueId === id);
+          if (idx !== -1) {
+            h.splice(idx, 1);
+            localStorage.setItem('gpaHistoryBD', JSON.stringify(h));
+          }
+          loadHistory();
+        });
+    };
 
-    function renderHistory() { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); historyContainer.innerHTML=''; if(h.length===0){historyContainer.innerHTML='<p style="text-align:center;">কোনো রেজাল্ট নেই</p>';return;} h.forEach((item,idx)=>{const d=document.createElement('div');d.className='history-item';d.innerHTML=`<div style="flex:1;"><div class="student-info"><i class="fas fa-user"></i> ${item.studentName||''}</div><small>রোল:${item.studentRoll||'-'} | রেজি:${item.studentReg||'-'}</small><div><strong>GPA:${item.gpa}</strong> (${item.grade}) ${item.className||''}</div><small>${item.date||''}</small></div><button class="delete-history-btn" onclick="deleteLocalHistory(${idx})">🗑</button>`; historyContainer.appendChild(d);}); }
-    window.deleteLocalHistory = function(idx) { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); h.splice(idx,1); localStorage.setItem('gpaHistoryBD',JSON.stringify(h)); renderHistory(); };
+    window.clearHistory = function() {
+      if (!confirm('সকল সংরক্ষিত রেজাল্ট মুছে ফেলতে চান?')) return;
+      db.collection('results').get()
+        .then(snapshot => {
+          const batch = db.batch();
+          snapshot.forEach(doc => batch.delete(doc.ref));
+          return batch.commit();
+        })
+        .then(() => {
+          localStorage.removeItem('gpaHistoryBD');
+          loadHistory();
+        })
+        .catch(e => {
+          localStorage.removeItem('gpaHistoryBD');
+          loadHistory();
+        });
+    };
+
+    // Local storage deletion (used when offline or fallback)
+    function deleteLocalHistory(index) {
+      if (!confirm('আপনি কি নিশ্চিত যে এই রেজাল্টটি মুছে ফেলতে চান?')) return;
+      const h = JSON.parse(localStorage.getItem('gpaHistoryBD') || '[]');
+      h.splice(index, 1);
+      localStorage.setItem('gpaHistoryBD', JSON.stringify(h));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const h = JSON.parse(localStorage.getItem('gpaHistoryBD') || '[]');
+      historyContainer.innerHTML = '';
+      if (h.length === 0) {
+        historyContainer.innerHTML = '<p style="text-align:center;">কোনো রেজাল্ট নেই</p>';
+        return;
+      }
+      h.forEach((item, idx) => {
+        const d = document.createElement('div');
+        d.className = 'history-item';
+        d.innerHTML = `
+          <div style="flex:1;">
+            <div class="student-info"><i class="fas fa-user"></i> ${item.studentName||''}</div>
+            <small>রোল:${item.studentRoll||'-'} | রেজি:${item.studentReg||'-'}</small>
+            <div><strong>GPA:${item.gpa}</strong> (${item.grade}) ${item.className||''}</div>
+            <small>${item.date||''}</small>
+          </div>
+          <button class="delete-history-btn" onclick="deleteLocalHistory(${idx})">🗑</button>
+        `;
+        historyContainer.appendChild(d);
+      });
+    }
 
     async function init() {
       await loadConfig();
