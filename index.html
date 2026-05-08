@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>All Result BD | সকল শ্রেণীর রেজাল্ট</title>
+  <meta name="description" content="PSC, JSC, SSC, HSC, অনার্স, মাস্টার্স সহ সকল শ্রেণীর GPA ক্যালকুলেটর। বাংলাদেশের গ্রেডিং সিস্টেম অনুযায়ী সঠিক GPA হিসাব করুন।" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Segoe UI',Arial,sans-serif;
+      background:linear-gradient(145deg,#f0f4ff 0%,#e6eefb 100%);
+      color:#0b1e33; min-height:100vh; padding:20px 12px;
+      transition:background 0.4s,color 0.4s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    body.dark { background:linear-gradient(145deg,#0f172a 0%,#1e293b 100%); color:#e2e8f0; }
+    .container { max-width:720px; width:100%; margin:0 auto; display:flex; flex-direction:column; gap:24px; }
+    .card {
+      background:rgba(255,255,255,0.8); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+      border-radius:32px; padding:24px 20px;
+      box-shadow:0 20px 35px rgba(0,0,0,0.08),0 0 0 1px rgba(255,255,255,0.6);
+      transition:all 0.35s;
+    }
+    body.dark .card { background:rgba(30,41,59,0.75); backdrop-filter:blur(20px); box-shadow:0 20px 35px rgba(0,0,0,0.5),0 0 0 1px rgba(71,85,105,0.5); }
+    .header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:12px; }
+    .header-left { text-align:left; flex:1; }
+    .header-left h1 { font-size:2.2rem; font-weight:700; background:linear-gradient(to right,#2563eb,#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-0.5px; margin-bottom:4px; line-height:1.2; }
+    body.dark .header-left h1 { background:linear-gradient(to right,#60a5fa,#a78bfa); -webkit-background-clip:text; background-clip:text; }
+    .subtitle { font-size:0.9rem; color:#475569; font-weight:500; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    body.dark .subtitle { color:#cbd5e1; }
+    .header-actions { display:flex; align-items:center; gap:8px; position:relative; }
+    .dark-mode-btn, .menu-btn {
+      background:rgba(255,255,255,0.7); backdrop-filter:blur(8px);
+      border:1px solid rgba(203,213,225,0.8); border-radius:50px;
+      width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:1.3rem; transition:all 0.3s; box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    }
+    .dark-mode-btn { color:#f59e0b; background:#fef3c7; }
+    .menu-btn { color:#475569; background:#f1f5f9; }
+    body.dark .dark-mode-btn { background:#334155; color:#facc15; border-color:#475569; }
+    body.dark .menu-btn { background:#334155; color:#cbd5e1; border-color:#475569; }
+    .dark-mode-btn:hover, .menu-btn:hover { transform:scale(1.07); }
+    .dropdown-menu {
+      position:absolute; top:50px; right:0; background:white; border-radius:20px;
+      padding:12px; width:300px; max-height:450px; overflow-y:auto;
+      box-shadow:0 15px 30px rgba(0,0,0,0.15); z-index:100; display:none; animation:fadeIn 0.2s ease;
+    }
+    body.dark .dropdown-menu { background:#1e293b; box-shadow:0 15px 30px rgba(0,0,0,0.4); }
+    .dropdown-menu.active { display:block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+    .menu-category { margin-bottom:8px; }
+    .menu-category-title {
+      font-weight:700; font-size:0.85rem; color:#475569; padding:8px 12px;
+      background:#f1f5f9; border-radius:12px; margin-bottom:4px; display:flex; align-items:center; gap:8px;
+    }
+    body.dark .menu-category-title { background:#334155; color:#94a3b8; }
+    .menu-link-item {
+      display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px;
+      text-decoration:none; color:#1e293b; font-weight:500; font-size:0.9rem; transition:all 0.2s;
+    }
+    body.dark .menu-link-item { color:#e2e8f0; }
+    .menu-link-item:hover { background:#e2e8f0; }
+    body.dark .menu-link-item:hover { background:#475569; }
+    .menu-link-item i { width:20px; text-align:center; color:#2563eb; }
+    body.dark .menu-link-item i { color:#60a5fa; }
+    .govt-card { background:linear-gradient(135deg,#dbeafe,#bfdbfe); border-radius:16px; padding:12px; text-align:center; border:1px solid #93c5fd; }
+    body.dark .govt-card { background:linear-gradient(135deg,#1e3a8a,#1e40af); border-color:#3b82f6; }
+    .govt-card button { background:#2563eb; color:white; border:none; padding:10px 16px; border-radius:12px; font-weight:600; cursor:pointer; width:100%; }
+    .ad-box {
+      background:rgba(203,213,225,0.5); backdrop-filter:blur(8px);
+      border:2px dashed #94a3b8; padding:16px; text-align:center; border-radius:20px;
+      font-weight:600; color:#334155; letter-spacing:0.4px; min-height:90px;
+      display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer; transition:0.3s;
+    }
+    .ad-box:hover { border-color:#2563eb; }
+    body.dark .ad-box { background:rgba(51,65,85,0.7); border-color:#64748b; color:#cbd5e1; }
+    body.dark .ad-box:hover { border-color:#60a5fa; }
+    .ad-box img { max-width:100%; height:auto; border-radius:12px; }
+    .ad-fallback-banner { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:20px; border-radius:16px; text-align:center; font-weight:600; width:100%; }
+    .offline-msg { background:#e2e8f0; color:#475569; padding:20px; border-radius:16px; font-size:0.9rem; }
+    .section-title { font-size:1.4rem; font-weight:650; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+    .student-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+    .student-info-grid input {
+      padding:14px 16px; border-radius:16px; border:1px solid #cbd5e1;
+      background:white; font-size:0.95rem; outline:none; transition:0.2s; width:100%;
+    }
+    body.dark .student-info-grid input { background:#1e293b; border-color:#475569; color:#f1f5f9; }
+    .student-info-grid input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.25); }
+    .required-field::placeholder { color:#ef4444; font-weight:500; }
+    body.dark .required-field::placeholder { color:#f87171; }
+    .subject-list { display:flex; flex-direction:column; gap:14px; }
+    .subject-row {
+      display:flex; align-items:center; gap:10px;
+      background:rgba(241,245,249,0.7); padding:8px 10px; border-radius:20px;
+      transition:all 0.25s; border:1px solid transparent;
+    }
+    body.dark .subject-row { background:rgba(51,65,85,0.6); }
+    .subject-row:hover { border-color:#2563eb40; background:rgba(255,255,255,0.9); }
+    body.dark .subject-row:hover { background:rgba(51,65,85,0.8); border-color:#60a5fa40; }
+    .subject-row input { flex:2; padding:14px 12px; border-radius:16px; border:1px solid #cbd5e1; background:white; font-size:1rem; outline:none; transition:0.2s; }
+    body.dark .subject-row input { background:#1e293b; border-color:#475569; color:#f1f5f9; }
+    .subject-row input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.25); }
+    .mark-wrapper { display:flex; gap:8px; align-items:center; }
+    .mark-wrapper input { width:85px; text-align:center; }
+    .delete-icon-btn {
+      background:none; border:none; width:38px; height:38px; border-radius:14px;
+      font-size:1.1rem; color:#ef4444; cursor:pointer; transition:all 0.25s;
+      display:flex; align-items:center; justify-content:center; background:#fee2e2;
+    }
+    body.dark .delete-icon-btn { background:#7f1d1d30; color:#fecaca; }
+    .delete-icon-btn:hover { background:#fecaca; transform:scale(1.08); color:#b91c1c; }
+    body.dark .delete-icon-btn:hover { background:#b91c1c40; }
+    .optional-badge { background:#dbeafe; color:#1e40af; font-size:0.65rem; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:0.5px; margin-right:6px; text-transform:uppercase; }
+    body.dark .optional-badge { background:#1e3a8a; color:#bfdbfe; }
+    .btn-grid { display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; }
+    .btn {
+      border:none; padding:14px 18px; border-radius:20px; font-weight:600; font-size:0.95rem;
+      cursor:pointer; background:white; transition:all 0.25s; display:inline-flex;
+      align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 10px rgba(0,0,0,0.03); flex:1 1 auto;
+    }
+    .btn-primary { background:#2563eb; color:white; }
+    .btn-primary:hover { background:#1d4ed8; transform:translateY(-2px); }
+    .btn-outline { background:transparent; border:1px solid #cbd5e1; color:#1e293b; }
+    body.dark .btn-outline { border-color:#475569; color:#e2e8f0; }
+    .result-box { margin-top:24px; background:linear-gradient(135deg,#dcfce7,#bbf7d0); border-radius:28px; padding:24px; text-align:center; }
+    body.dark .result-box { background:linear-gradient(135deg,#14532d,#166534); }
+    .gpa-number { font-size:4rem; font-weight:800; color:#15803d; line-height:1; }
+    body.dark .gpa-number { color:#86efac; }
+    .grade-badge { font-size:2rem; font-weight:700; background:white; display:inline-block; padding:6px 28px; border-radius:40px; margin-top:8px; }
+    body.dark .grade-badge { background:#1e293b; color:#facc15; }
+    .history-list { display:flex; flex-direction:column; gap:12px; max-height:400px; overflow-y:auto; }
+    .history-item { background:rgba(241,245,249,0.8); border-radius:18px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    body.dark .history-item { background:#334155; }
+    .history-item .student-info { font-weight:600; color:#2563eb; }
+    body.dark .history-item .student-info { color:#60a5fa; }
+    .history-item .delete-history-btn { background:#fee2e2; border:none; padding:6px 10px; border-radius:10px; color:#ef4444; cursor:pointer; font-size:0.85rem; transition:0.2s; }
+    body.dark .history-item .delete-history-btn { background:#7f1d1d40; color:#fecaca; }
+    .history-item .delete-history-btn:hover { background:#fecaca; }
+    .option-row { display:flex; align-items:center; gap:16px; margin:12px 0 8px; flex-wrap:wrap; }
+    .toggle-switch { display:flex; align-items:center; gap:8px; background:#f1f5f9; padding:8px 14px; border-radius:30px; font-size:0.9rem; }
+    body.dark .toggle-switch { background:#334155; }
+    select { padding:12px 16px; border-radius:20px; border:1px solid #cbd5e1; background:white; font-weight:500; outline:none; cursor:pointer; font-size:0.95rem; }
+    body.dark select { background:#1e293b; color:white; border-color:#475569; }
+    .duplicate-warning { background:#fef3c7; color:#92400e; padding:10px 14px; border-radius:12px; font-size:0.9rem; margin-top:12px; display:none; align-items:center; gap:8px; }
+    body.dark .duplicate-warning { background:#78350f; color:#fde68a; }
+    footer { text-align:center; color:#64748b; font-size:0.9rem; margin-top:16px; }
+    footer a { color:#2563eb; text-decoration:none; margin:0 8px; font-weight:500; }
+    footer a:hover { text-decoration:underline; }
+
+    .modal-overlay {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.6); backdrop-filter:blur(6px);
+      display:none; align-items:center; justify-content:center; z-index:999;
+      padding:20px;
+    }
+    .modal-overlay.active { display:flex; }
+    .modal-box {
+      background:white; border-radius:28px; max-width:600px; width:100%;
+      max-height:80vh; overflow-y:auto; padding:28px 24px;
+      box-shadow:0 25px 50px rgba(0,0,0,0.2); animation:modalIn 0.3s ease;
+    }
+    body.dark .modal-box { background:#1e293b; color:#e2e8f0; }
+    @keyframes modalIn { from{opacity:0; transform:scale(0.9);} to{opacity:1; transform:scale(1);} }
+    .modal-box h2 { font-size:1.6rem; margin-bottom:16px; color:#2563eb; }
+    body.dark .modal-box h2 { color:#60a5fa; }
+    .modal-box p, .modal-box li { margin-bottom:10px; line-height:1.6; color:#334155; }
+    body.dark .modal-box p, body.dark .modal-box li { color:#cbd5e1; }
+    .modal-close {
+      background:#e2e8f0; border:none; border-radius:50%; width:36px; height:36px;
+      font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      float:right; transition:0.2s;
+    }
+    .modal-close:hover { background:#cbd5e1; }
+    body.dark .modal-close { background:#334155; color:white; }
+    body.dark .modal-close:hover { background:#475569; }
+
+    .info-section {
+      background:rgba(255,255,255,0.8); backdrop-filter:blur(18px);
+      border-radius:24px; padding:20px; margin-bottom:8px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.05),0 0 0 1px rgba(255,255,255,0.5);
+    }
+    body.dark .info-section { background:rgba(30,41,59,0.7); box-shadow:0 10px 25px rgba(0,0,0,0.3),0 0 0 1px rgba(71,85,105,0.4); }
+    .info-section h2 { color:#2563eb; margin-bottom:10px; font-size:1.2rem; }
+    body.dark .info-section h2 { color:#60a5fa; }
+    .info-section p, .info-section ul { color:#475569; line-height:1.6; margin-bottom:10px; }
+    body.dark .info-section p, body.dark .info-section ul { color:#94a3b8; }
+    .info-section ul { padding-left:20px; }
+    .info-section ul li { margin-bottom:6px; }
+
+    @media (max-width:500px) {
+      .subject-row { flex-wrap:wrap; } .btn { padding:12px; } .header { flex-direction:column; align-items:flex-start; } .header-actions { align-self:flex-end; } .option-row { flex-direction:column; align-items:flex-start; } .student-info-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-left">
+        <h1 id="appTitle">GPA Calculator BD</h1>
+        <div class="subtitle" id="appSubtitle"><i class="fas fa-graduation-cap"></i> সকল শ্রেণীর রেজাল্ট ক্যালকুলেটর</div>
+      </div>
+      <div class="header-actions">
+        <button class="dark-mode-btn" onclick="toggleDarkMode()" id="darkModeBtn"><i class="fas fa-moon"></i></button>
+        <button class="menu-btn" onclick="toggleMenu()"><i class="fas fa-ellipsis-v"></i></button>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div id="govtResultCard" style="display:none;" class="menu-category">
+            <div class="govt-card">
+              <i class="fas fa-university" style="font-size:1.8rem; color:#2563eb;"></i>
+              <p id="govtLabel" style="margin:6px 0; font-weight:600;">সরকারি রেজাল্ট দেখুন</p>
+              <button onclick="openGovtResult()"><i class="fas fa-external-link-alt"></i> রেজাল্ট দেখুন</button>
+            </div>
+          </div>
+          <div id="studyLinksContainer"></div>
+          <div class="menu-category">
+            <a class="menu-link-item" href="#" onclick="openModal('privacyModal')"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+            <a class="menu-link-item" href="#" onclick="openModal('aboutModal')"><i class="fas fa-info-circle"></i> About Us</a>
+            <a class="menu-link-item" href="#" onclick="openModal('contactModal')"><i class="fas fa-envelope"></i> Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2><i class="fas fa-calculator"></i> GPA ক্যালকুলেটর কী?</h2>
+      <p><strong>GPA (Grade Point Average)</strong> হলো শিক্ষার্থীদের একাডেমিক পারফরম্যান্স পরিমাপের একটি আন্তর্জাতিক পদ্ধতি। বাংলাদেশে PSC, JSC, SSC, HSC, অনার্স ও মাস্টার্স পরীক্ষার ফলাফল GPA পদ্ধতিতে প্রকাশ করা হয়।</p>
+      <p>আমাদের <strong>GPA Calculator BD</strong> টুলটি বাংলাদেশের জাতীয় শিক্ষাক্রম অনুযায়ী ডিজাইন করা হয়েছে, যা আপনাকে সহজেই আপনার পরীক্ষার ফলাফল GPA-তে রূপান্তর করতে সাহায্য করে।</p>
+      <h3>বৈশিষ্ট্যসমূহ:</h3>
+      <ul>
+        <li>✅ অপশনাল সাবজেক্টের বোনাস পয়েন্ট স্বয়ংক্রিয়ভাবে যোগ হয়</li>
+        <li>✅ ডুপ্লিকেট রেজাল্ট চেক করা হয়</li>
+        <li>✅ পূর্ববর্তী রেজাল্ট সংরক্ষণ (হিস্টরি)</li>
+        <li>✅ ডার্ক মোড সাপোর্ট</li>
+        <li>✅ PSC থেকে মাস্টার্স পর্যন্ত সকল শ্রেণীর জন্য উপযোগী</li>
+      </ul>
+    </div>
+
+    <div class="ad-box" id="ad-banner-1" onclick="handleAdClick(1)"><div id="ad-content-1"></div></div>
+
+    <div class="card">
+      <span class="section-title"><i class="fas fa-user-graduate"></i> শিক্ষার্থীর তথ্য</span>
+      <div class="student-info-grid">
+        <input type="text" id="studentName" placeholder="* শিক্ষার্থীর নাম (বাধ্যতামূলক)" class="required-field" required>
+        <input type="text" id="studentRoll" placeholder="* রোল নাম্বার (বাধ্যতামূলক)" class="required-field" required>
+        <input type="text" id="studentReg" placeholder="* রেজিস্ট্রেশন নাম্বার (বাধ্যতামূলক)" class="required-field" required>
+        <select id="classType" onchange="handleClassChange()">
+          <option value="psc">🏫 PSC</option><option value="jsc">📗 JSC</option><option value="ssc" selected>📘 SSC</option><option value="hsc">📙 HSC</option><option value="honours">🎓 অনার্স</option><option value="masters">📚 মাস্টার্স</option><option value="custom">✨ কাস্টম</option>
+        </select>
+      </div>
+      <div id="classInfo" style="margin-bottom:12px; font-size:0.85rem; color:#2563eb; font-weight:500;"><i class="fas fa-info-circle"></i> SSC পরীক্ষার জন্য ডিফল্ট সাবজেক্ট</div>
+      <div class="ad-box" id="ad-banner-2" style="margin-bottom:16px; min-height:60px;" onclick="handleAdClick(2)"><div id="ad-content-2"></div></div>
+      <span class="section-title" style="font-size:1.2rem;"><i class="fas fa-book-open"></i> বিষয় ও নম্বর</span>
+      <div class="option-row"><div class="toggle-switch"><i class="fas fa-star" style="color:#f59e0b;"></i><span>অপশনাল বিষয়</span><input type="checkbox" id="optionalToggle" onchange="toggleOptionalMode()"></div></div>
+      <div id="subjects" class="subject-list"></div>
+      <div class="btn-grid">
+        <button class="btn btn-primary" onclick="addSubject()"><i class="fas fa-plus-circle"></i> বিষয় যোগ</button>
+        <button class="btn btn-outline" onclick="resetAll()"><i class="fas fa-redo-alt"></i> রিসেট</button>
+      </div>
+      <button class="btn btn-primary" style="width:100%; margin-top:14px;" onclick="calculateGPA()"><i class="fas fa-calculator"></i> GPA ক্যালকুলেট করুন</button>
+      <div id="duplicateWarning" class="duplicate-warning"><i class="fas fa-exclamation-triangle"></i><span id="duplicateMessage"></span></div>
+      <div id="result"></div>
+    </div>
+
+    <div class="ad-box" id="ad-banner-3" onclick="handleAdClick(3)"><div id="ad-content-3"></div></div>
+    <div class="ad-box" id="ad-banner-4" onclick="handleAdClick(4)"><div id="ad-content-4"></div></div>
+
+    <div class="card">
+      <h2 style="font-size:1.3rem; margin-bottom:16px; display:flex; align-items:center; gap:8px;"><i class="fas fa-history"></i> সংরক্ষিত রেজাল্ট</h2>
+      <div id="history" class="history-list"></div>
+      <div class="ad-box" id="ad-banner-5" style="margin-top:16px; min-height:60px;" onclick="handleAdClick(5)"><div id="ad-content-5"></div></div>
+      <button class="btn btn-outline" style="margin-top:16px; width:100%;" onclick="clearHistory()"><i class="fas fa-trash-alt"></i> সকল ইতিহাস মুছুন</button>
+    </div>
+    <footer id="footerText">
+      <i class="far fa-copyright"></i> 2026 GPA Calculator BD<br>
+      <a href="#" onclick="openModal('privacyModal')">Privacy Policy</a> |
+      <a href="#" onclick="openModal('aboutModal')">About Us</a> |
+      <a href="#" onclick="openModal('contactModal')">Contact Us</a>
+    </footer>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="privacyModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('privacyModal')">&times;</button>
+      <h2>Privacy Policy</h2>
+      <p><strong>শেষ আপডেট:</strong> <span id="privacyUpdated">৭ মে, ২০২৬</span></p>
+      <div id="privacyContent">Privacy Policy-এর সম্পূর্ণ বিবরণ...</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="aboutModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('aboutModal')">&times;</button>
+      <h2 id="aboutTitle">About GPA Calculator BD</h2>
+      <div id="aboutDesc">স্বাগতম! GPA Calculator BD একটি সম্পূর্ণ বিনামূল্যের অনলাইন টুল...</div>
+      <p id="aboutDeveloper" style="margin-top:16px;"></p>
+      <p id="aboutVersion"></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('contactModal')">&times;</button>
+      <h2>Contact Us</h2>
+      <p>আমাদের সাথে যোগাযোগ করতে নিচের মাধ্যমগুলো ব্যবহার করুন।</p>
+      <div id="contactContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDNKVhE-a9-C_YHf5R-lhwsidcirvpacG8",
+      authDomain: "all-result-27c50.firebaseapp.com",
+      projectId: "all-result-27c50",
+      storageBucket: "all-result-27c50.firebasestorage.app",
+      messagingSenderId: "513043683874",
+      appId: "1:513043683874:web:25a1c24b205f124b64087b",
+      measurementId: "G-2BR8J9148B"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const DEFAULT_CONFIG = {
+      appName: 'GPA Calculator BD',
+      appSubtitle: 'সকল শ্রেণীর রেজাল্ট ক্যালকুলেটর',
+      footerText: '© 2026 GPA Calculator BD · PSC থেকে মাস্টার্স পর্যন্ত',
+      enableAds: true, enableHistory: true, enableDarkMode: true, enableOptionalSubject: true, enableDuplicateCheck: true, maxHistoryItems: 50,
+      ads: [
+        { id:1, type:'fallback', content:'', link:'', enabled:true, fallback:'Google AdSense Banner (728x90)' },
+        { id:2, type:'fallback', content:'', link:'', enabled:true, fallback:'ইন্টারস্টিশিয়াল / রেক্টেঙ্গল অ্যাড' },
+        { id:3, type:'fallback', content:'', link:'', enabled:true, fallback:'PropellerAds ব্যানার (336x280)' },
+        { id:4, type:'fallback', content:'', link:'', enabled:true, fallback:'PropellerAds নেটিভ বিজ্ঞাপন' },
+        { id:5, type:'fallback', content:'', link:'', enabled:true, fallback:'Adsterra ব্যানার' }
+      ],
+      adScripts: { propeller:'', adsterra:'', monetag:'', clickadu:'' },
+      governmentResult: { enabled:true, label:'সরকারি রেজাল্ট দেখুন', url:'http://www.educationboardresults.gov.bd' },
+      contactContent:{email:'Mdshamimshekh965@gmail.com',phone:'+8801XXXXXXXXX',address:'বাংলাদেশ'},
+      aboutContent:{title:'About GPA Calculator BD',desc:'স্বাগতম! GPA Calculator BD একটি সম্পূর্ণ বিনামূল্যের অনলাইন টুল...',developer:'Md Shamim Sheikh',version:'v3.0'},
+      privacyContent:{updated:'৭ মে, ২০২৬',content:'Privacy Policy এর সম্পূর্ণ বিবরণ...'},
+      studyLinks: [
+        { category:'📚 শিক্ষা বোর্ড ও রেজাল্ট', links:[
+          { label:'অফিসিয়াল রেজাল্ট সাইট', url:'http://www.educationboardresults.gov.bd' },
+          { label:'ঢাকা শিক্ষা বোর্ড', url:'http://www.dhakaeducationboard.gov.bd' },
+          { label:'এনসিটিবি (NCTB)', url:'http://nctb.gov.bd' }
+        ]},
+        { category:'🎓 ফ্রি অনলাইন কোর্স', links:[
+          { label:'মুক্তপাঠ', url:'https://muktopaath.gov.bd' },
+          { label:'টেন মিনিট স্কুল', url:'https://10minuteschool.com' }
+        ]},
+        { category:'📖 ডিজিটাল লাইব্রেরি', links:[
+          { label:'ই-বাংলা লাইব্রেরি', url:'http://www.ebanglalibrary.com' },
+          { label:'বাংলা একাডেমি (আর্কাইভ)', url:'https://archive.org' }
+        ]}
+      ],
+      classSubjects: {
+        psc:{ name:'PSC (প্রাথমিক শিক্ষা সমাপনী)', subjects:['বাংলা','ইংরেজি','গণিত','বিজ্ঞান','বাংলাদেশ ও বিশ্বপরিচয়','ধর্ম'] },
+        jsc:{ name:'JSC (জুনিয়র স্কুল সার্টিফিকেট)', subjects:['বাংলা','ইংরেজি','গণিত','বিজ্ঞান','ICT','বাংলাদেশ ও বিশ্বপরিচয়','ধর্ম'] },
+        ssc:{ name:'SSC (মাধ্যমিক স্কুল সার্টিফিকেট)', subjects:['বাংলা','ইংরেজি','গণিত','পদার্থ বিজ্ঞান','রসায়ন','জীববিজ্ঞান','ICT'] },
+        hsc:{ name:'HSC (উচ্চ মাধ্যমিক সার্টিফিকেট)', subjects:['বাংলা','ইংরেজি','পদার্থ বিজ্ঞান','রসায়ন','উচ্চতর গণিত','জীববিজ্ঞান','ICT'] },
+        honours:{ name:'অনার্স (ডিগ্রী)', subjects:['বাংলা','ইংরেজি','প্রধান বিষয় ১','প্রধান বিষয় ২','প্রধান বিষয় ৩','অপ্রধান বিষয় ১','অপ্রধান বিষয় ২'] },
+        masters:{ name:'মাস্টার্স (স্নাতকোত্তর)', subjects:['প্রধান বিষয় ১','প্রধান বিষয় ২','প্রধান বিষয় ৩','প্রধান বিষয় ৪','গবেষণা/থিসিস','ভাইভা'] },
+        custom:{ name:'কাস্টম', subjects:['বিষয় ১','বিষয় ২','বিষয় ৩','বিষয় ৪'] }
+      }
+    };
+    let adminConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+
+    function toggleMenu() { document.getElementById('dropdownMenu').classList.toggle('active'); }
+    document.addEventListener('click', e => { if (!e.target.closest('.header-actions')) document.getElementById('dropdownMenu').classList.remove('active'); });
+    function openGovtResult() { if (adminConfig.governmentResult && adminConfig.governmentResult.url) window.open(adminConfig.governmentResult.url, '_blank'); }
+
+    function openModal(id) {
+      if (id === 'privacyModal') {
+        document.getElementById('privacyUpdated').textContent = adminConfig.privacyContent?.updated || '৭ মে, ২০২৬';
+        document.getElementById('privacyContent').innerHTML = adminConfig.privacyContent?.content || '';
+      } else if (id === 'aboutModal') {
+        document.getElementById('aboutTitle').textContent = adminConfig.aboutContent?.title || 'About GPA Calculator BD';
+        document.getElementById('aboutDesc').innerHTML = adminConfig.aboutContent?.desc || '';
+        document.getElementById('aboutDeveloper').innerHTML = '<strong>ডেভেলপার:</strong> ' + (adminConfig.aboutContent?.developer || 'Md Shamim Sheikh');
+        document.getElementById('aboutVersion').innerHTML = '<strong>ভার্সন:</strong> ' + (adminConfig.aboutContent?.version || 'v3.0');
+      } else if (id === 'contactModal') {
+        document.getElementById('contactContent').innerHTML = `
+          <ul>
+            <li><strong>ইমেইল:</strong> ${adminConfig.contactContent?.email || 'Mdshamimshekh965@gmail.com'}</li>
+            <li><strong>ফোন/হোয়াটসঅ্যাপ:</strong> ${adminConfig.contactContent?.phone || '+8801XXXXXXXXX'}</li>
+            <li><strong>ঠিকানা:</strong> ${adminConfig.contactContent?.address || 'বাংলাদেশ'}</li>
+          </ul>`;
+      }
+      document.getElementById(id).classList.add('active');
+      document.getElementById('dropdownMenu').classList.remove('active');
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    window.onclick = function(event) { if (event.target.classList.contains('modal-overlay')) event.target.classList.remove('active'); }
+
+    async function loadConfig() {
+      let firebaseData = null;
+      try { const doc = await db.collection('adminConfig').doc('globalConfig').get(); if (doc.exists) firebaseData = doc.data(); } catch(e) {}
+      if (firebaseData) {
+        adminConfig = { ...DEFAULT_CONFIG, ...firebaseData };
+        if (firebaseData.classSubjects) adminConfig.classSubjects = { ...DEFAULT_CONFIG.classSubjects, ...firebaseData.classSubjects };
+        localStorage.setItem('gpaAdminConfig', JSON.stringify(adminConfig));
+      } else {
+        const saved = localStorage.getItem('gpaAdminConfig');
+        if (saved) try { const parsed = JSON.parse(saved); adminConfig = { ...DEFAULT_CONFIG, ...parsed }; if (parsed.classSubjects) adminConfig.classSubjects = { ...DEFAULT_CONFIG.classSubjects, ...parsed.classSubjects }; } catch(e) {}
+      }
+      if (!adminConfig.classSubjects || Object.keys(adminConfig.classSubjects).length === 0) adminConfig.classSubjects = JSON.parse(JSON.stringify(DEFAULT_CONFIG.classSubjects));
+      applyConfig();
+    }
+
+    function applyConfig() {
+      document.getElementById('appTitle').textContent = adminConfig.appName;
+      document.getElementById('appSubtitle').innerHTML = `<i class="fas fa-graduation-cap"></i> ${adminConfig.appSubtitle}`;
+      document.getElementById('footerText').innerHTML = adminConfig.footerText + '<br><a href="#" onclick="openModal(\'privacyModal\')">Privacy Policy</a> | <a href="#" onclick="openModal(\'aboutModal\')">About Us</a> | <a href="#" onclick="openModal(\'contactModal\')">Contact Us</a>';
+      if (!adminConfig.enableDarkMode) document.getElementById('darkModeBtn').style.display = 'none';
+      else document.getElementById('darkModeBtn').style.display = 'flex';
+      if (!adminConfig.enableOptionalSubject) document.querySelector('.toggle-switch').style.display = 'none';
+      else document.querySelector('.toggle-switch').style.display = 'flex';
+      const govCard = document.getElementById('govtResultCard');
+      if (adminConfig.governmentResult && adminConfig.governmentResult.enabled) {
+        govCard.style.display = 'block';
+        document.getElementById('govtLabel').textContent = adminConfig.governmentResult.label || 'সরকারি রেজাল্ট দেখুন';
+      } else govCard.style.display = 'none';
+      renderStudyLinks();
+      if (!adminConfig.enableAds) document.querySelectorAll('.ad-box').forEach(box => box.style.display = 'none');
+      else { document.querySelectorAll('.ad-box').forEach(box => box.style.display = 'flex'); loadAds(); }
+      const historyCard = document.querySelector('.card:last-of-type');
+      if (!adminConfig.enableHistory && historyCard) historyCard.style.display = 'none';
+      else if (historyCard) historyCard.style.display = 'block';
+      loadAdScripts();
+    }
+
+    function renderStudyLinks() {
+      const container = document.getElementById('studyLinksContainer');
+      container.innerHTML = '';
+      if (!adminConfig.studyLinks || adminConfig.studyLinks.length === 0) return;
+      adminConfig.studyLinks.forEach(cat => {
+        if (!cat.links || cat.links.length === 0) return;
+        const div = document.createElement('div');
+        div.className = 'menu-category';
+        div.innerHTML = `<div class="menu-category-title">${cat.category}</div>`;
+        cat.links.forEach(link => {
+          const a = document.createElement('a');
+          a.className = 'menu-link-item';
+          a.href = '#';
+          a.innerHTML = `<i class="fas fa-external-link-alt"></i> ${link.label}`;
+          a.onclick = function(e) { e.preventDefault(); window.open(link.url, '_blank'); };
+          div.appendChild(a);
+        });
+        container.appendChild(div);
+      });
+    }
+
+    function loadAds() {
+      adminConfig.ads.forEach(ad => {
+        const ac = document.getElementById(`ad-content-${ad.id}`);
+        const ab = document.getElementById(`ad-banner-${ad.id}`);
+        if (!ac || !ab) return;
+        if (!ad.enabled) { ab.style.display = 'none'; return; }
+        ab.style.display = 'flex';
+        if (!navigator.onLine) { ac.innerHTML = `<div class="offline-msg"><i class="fas fa-wifi"></i> অফলাইন</div>`; return; }
+        if (ad.type === 'image' && ad.content) ac.innerHTML = `<img src="${ad.content}" style="max-width:100%; border-radius:12px;">`;
+        else if (ad.type === 'script' && ad.content) { ac.innerHTML = ad.content; ac.querySelectorAll('script').forEach(s => { const ns = document.createElement('script'); ns.textContent = s.textContent; s.replaceWith(ns); }); }
+        else ac.innerHTML = `<div class="ad-fallback-banner">${ad.fallback}</div>`;
+      });
+    }
+
+    function loadAdScripts() {
+      ['propeller','adsterra','monetag','clickadu'].forEach(k => {
+        const src = adminConfig.adScripts[k];
+        if (src && !document.querySelector(`script[src="${src}"]`)) { const s = document.createElement('script'); s.src = src; s.async = true; document.body.appendChild(s); }
+      });
+    }
+
+    function handleAdClick(adId) { const ad = adminConfig.ads.find(a => a.id === adId); if (ad && ad.link) window.open(ad.link, '_blank'); }
+
+    const subjectsContainer = document.getElementById('subjects');
+    const resultContainer = document.getElementById('result');
+    const historyContainer = document.getElementById('history');
+    const optionalToggle = document.getElementById('optionalToggle');
+    const classTypeSelect = document.getElementById('classType');
+    const classInfo = document.getElementById('classInfo');
+    const duplicateWarning = document.getElementById('duplicateWarning');
+    const duplicateMessage = document.getElementById('duplicateMessage');
+
+    function getGradePoint(m) { if (m>=80) return 5; if (m>=70) return 4; if (m>=60) return 3.5; if (m>=50) return 3; if (m>=40) return 2; if (m>=33) return 1; return 0; }
+    function getGrade(g) { if (g===5) return 'A+'; if (g>=4) return 'A'; if (g>=3.5) return 'A-'; if (g>=3) return 'B'; if (g>=2) return 'C'; if (g>=1) return 'D'; return 'F'; }
+    function generateUniqueId(n,r,reg,c) { return `${n}-${r}-${reg}-${c}`.toLowerCase().replace(/\s+/g,'-'); }
+
+    async function isDuplicateResult(n,r,reg,c) {
+      if (!adminConfig.enableDuplicateCheck) return false;
+      try { const snap = await db.collection('results').where('studentName','==',n).where('studentRoll','==',r).where('studentReg','==',reg).where('className','==',c).get(); return !snap.empty; }
+      catch(e) { const h = JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); const uid = generateUniqueId(n,r,reg,c); return h.some(i=>generateUniqueId(i.studentName||'',i.studentRoll||'',i.studentReg||'',i.className||'')===uid); }
+    }
+
+    function createSubject(name='',marks='',isOptional=false) {
+      const d = document.createElement('div'); d.className='subject-row'; d.dataset.optional=isOptional;
+      d.innerHTML = `<input type="text" placeholder="বিষয়ের নাম" value="${name}" class="subject-name" style="flex:2;"><div class="mark-wrapper">${isOptional?'<span class="optional-badge"><i class="fas fa-star"></i> OPT</span>':''}<input type="number" placeholder="নম্বর" value="${marks}" class="subject-mark" min="0" max="100"><button class="delete-icon-btn"><i class="fas fa-trash-alt"></i></button></div>`;
+      d.querySelector('.delete-icon-btn').addEventListener('click',()=>d.remove());
+      subjectsContainer.appendChild(d);
+    }
+
+    window.addSubject = () => createSubject('','',optionalToggle.checked);
+    window.toggleOptionalMode = function() {
+      const rows = document.querySelectorAll('.subject-row'); if (rows.length===0) return;
+      if (optionalToggle.checked) {
+        if (!document.querySelector('.subject-row[data-optional="true"]')) { const lr = rows[rows.length-1]; lr.dataset.optional='true'; const mw = lr.querySelector('.mark-wrapper'); if (!mw.querySelector('.optional-badge')) { const b = document.createElement('span'); b.className='optional-badge'; b.innerHTML='<i class="fas fa-star"></i> OPT'; mw.insertBefore(b, mw.querySelector('input')); } }
+      } else { rows.forEach(r=>{ r.dataset.optional='false'; const b=r.querySelector('.optional-badge'); if(b) b.remove(); }); }
+    };
+
+    window.handleClassChange = function() {
+      const ct = classTypeSelect.value;
+      const cd = adminConfig.classSubjects[ct];
+      if (!cd || !cd.subjects) { return; }
+      classInfo.innerHTML = `<i class="fas fa-info-circle"></i> ${cd.name} পরীক্ষার জন্য ডিফল্ট সাবজেক্ট`;
+      subjectsContainer.innerHTML=''; resultContainer.innerHTML=''; duplicateWarning.style.display='none'; optionalToggle.checked=false;
+      cd.subjects.forEach(s=>createSubject(s,'')); localStorage.setItem('lastClassType',ct);
+    };
+
+    window.calculateGPA = async function() {
+      const n = document.getElementById('studentName').value.trim();
+      const r = document.getElementById('studentRoll').value.trim();
+      const reg = document.getElementById('studentReg').value.trim();
+      const ct = classTypeSelect.value; const cd = adminConfig.classSubjects[ct];
+      if (!n) { alert('নাম দিন'); return; } if (!r) { alert('রোল দিন'); return; } if (!reg) { alert('রেজি দিন'); return; }
+      if (!cd || !cd.subjects) { alert('ক্লাসের সাবজেক্ট পাওয়া যায়নি। রিলোড করুন।'); return; }
+      if (await isDuplicateResult(n,r,reg,cd.name)) { duplicateWarning.style.display='flex'; duplicateMessage.textContent=`${n} (রোল:${r}) ইতিমধ্যে সংরক্ষিত`; resultContainer.innerHTML=''; return; }
+      duplicateWarning.style.display='none';
+      const rows = document.querySelectorAll('.subject-row'); if (rows.length===0) { alert('সাবজেক্ট যোগ করুন'); return; }
+      let tp=0, cnt=0, op=null, hm=false;
+      rows.forEach(row=>{ const m=parseFloat(row.querySelector('.subject-mark').value); if(isNaN(m)) return; hm=true; const p=getGradePoint(m); if(row.dataset.optional==='true') { op=(p>2?p-2:0); return; } tp+=p; cnt++; });
+      if (!hm) { alert('নম্বর দিন'); return; } if (cnt===0 && op===null) { alert('নন-অপশনাল নম্বর দিন'); return; }
+      let gpa = cnt>0?(tp/cnt):0; if(op!==null && op>0) gpa=Math.min(5,gpa+op);
+      gpa=gpa.toFixed(2); const grade=getGrade(parseFloat(gpa));
+      resultContainer.innerHTML = `<div class="result-box"><p style="font-weight:600;">${n}</p><p>রোল:${r} | রেজি:${reg}</p><p>${cd.name}</p><p style="font-size:1.2rem;"><i class="fas fa-trophy" style="color:#f59e0b;"></i> আপনার GPA</p><div class="gpa-number">${gpa}</div><div class="grade-badge">${grade}</div>${op!==null?'<p><i class="fas fa-star"></i> অপশনাল বোনাস</p>':''}</div>`;
+      await saveToFirestore(gpa,grade,cd.name,n,r,reg);
+    };
+
+    window.resetAll = function() { const cd=adminConfig.classSubjects[classTypeSelect.value]; if(!cd||!cd.subjects)return; subjectsContainer.innerHTML=''; resultContainer.innerHTML=''; duplicateWarning.style.display='none'; optionalToggle.checked=false; document.getElementById('studentName').value=''; document.getElementById('studentRoll').value=''; document.getElementById('studentReg').value=''; cd.subjects.forEach(s=>createSubject(s,'')); };
+    window.toggleDarkMode = function() { if(!adminConfig.enableDarkMode) return; document.body.classList.toggle('dark'); const d=document.body.classList.contains('dark'); localStorage.setItem('gpaDarkMode',d); document.getElementById('darkModeBtn').innerHTML = d?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'; };
+
+    async function saveToFirestore(gpa,grade,cn,sn,sr,sreg) {
+      if (!adminConfig.enableHistory) return;
+      const data = { gpa,grade,className:cn,studentName:sn,studentRoll:sr,studentReg:sreg,uniqueId:generateUniqueId(sn,sr,sreg,cn),timestamp:firebase.firestore.FieldValue.serverTimestamp(),date:new Date().toLocaleString('bn-BD') };
+      try { await db.collection('results').add(data); } catch(e) { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); h.unshift({...data,timestamp:new Date().toISOString()}); localStorage.setItem('gpaHistoryBD',JSON.stringify(h.slice(0,adminConfig.maxHistoryItems))); }
+      loadHistory();
+    }
+
+    async function loadHistory() {
+      if (!adminConfig.enableHistory) return;
+      try { const snap=await db.collection('results').orderBy('timestamp','desc').limit(adminConfig.maxHistoryItems).get(); const h=[]; snap.forEach(d=>h.push({id:d.id,...d.data()})); renderHistoryFromArray(h); }
+      catch(e) { renderHistory(); }
+    }
+
+    function renderHistoryFromArray(h) {
+      historyContainer.innerHTML='';
+      if (h.length===0) { historyContainer.innerHTML='<p style="text-align:center;">কোনো রেজাল্ট নেই</p>'; return; }
+      h.forEach(item=>{ const d=document.createElement('div'); d.className='history-item'; d.innerHTML=`<div style="flex:1;"><div class="student-info"><i class="fas fa-user"></i> ${item.studentName||''}</div><small>রোল:${item.studentRoll||'-'} | রেজি:${item.studentReg||'-'}</small><div><strong>GPA:${item.gpa}</strong> (${item.grade}) ${item.className||''}</div><small>${item.date||''}</small></div><button class="delete-history-btn" onclick="deleteHistoryItem('${item.id}')">🗑</button>`; historyContainer.appendChild(d); });
+    }
+
+    window.deleteHistoryItem = async function(id) { try { await db.collection('results').doc(id).delete(); } catch(e) { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); const i=h.findIndex(x=>x.uniqueId===id); if(i!==-1) h.splice(i,1); localStorage.setItem('gpaHistoryBD',JSON.stringify(h)); } loadHistory(); };
+    window.clearHistory = async function() { if(!confirm('মুছবেন?')) return; try { const snap=await db.collection('results').get(); const batch=db.batch(); snap.forEach(d=>batch.delete(d.ref)); await batch.commit(); } catch(e){} localStorage.removeItem('gpaHistoryBD'); loadHistory(); };
+
+    function renderHistory() { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); historyContainer.innerHTML=''; if(h.length===0){historyContainer.innerHTML='<p style="text-align:center;">কোনো রেজাল্ট নেই</p>';return;} h.forEach((item,idx)=>{const d=document.createElement('div');d.className='history-item';d.innerHTML=`<div style="flex:1;"><div class="student-info"><i class="fas fa-user"></i> ${item.studentName||''}</div><small>রোল:${item.studentRoll||'-'} | রেজি:${item.studentReg||'-'}</small><div><strong>GPA:${item.gpa}</strong> (${item.grade}) ${item.className||''}</div><small>${item.date||''}</small></div><button class="delete-history-btn" onclick="deleteLocalHistory(${idx})">🗑</button>`; historyContainer.appendChild(d);}); }
+    window.deleteLocalHistory = function(idx) { const h=JSON.parse(localStorage.getItem('gpaHistoryBD')||'[]'); h.splice(idx,1); localStorage.setItem('gpaHistoryBD',JSON.stringify(h)); renderHistory(); };
+
+    async function init() {
+      await loadConfig();
+      if (localStorage.getItem('gpaDarkMode')==='true' && adminConfig.enableDarkMode) { document.body.classList.add('dark'); document.getElementById('darkModeBtn').innerHTML='<i class="fas fa-sun"></i>'; }
+      const lc = localStorage.getItem('lastClassType')||'ssc'; classTypeSelect.value=lc; handleClassChange(); loadHistory();
+      setInterval(async()=>{ try{const doc=await db.collection('adminConfig').doc('globalConfig').get(); if(doc.exists){const nc={...DEFAULT_CONFIG,...doc.data()}; if(JSON.stringify(nc)!==JSON.stringify(adminConfig)){adminConfig=nc;applyConfig();handleClassChange();}} }catch(e){} },30000);
+    }
+    init();
+  </script>
+</body>
+</html>
