@@ -13,7 +13,6 @@
 - JavaScript / jQuery
 
 ## লাইভ সাইট
-[https://all-result-bd.vercel.app](https://all-result-bd.vercel.app)
 https://all-result-bd.netlify.app/
 ## ভবিষ্যৎ পরিকল্পনা
 - মোবাইল অ্যাপ সংস্করণ
