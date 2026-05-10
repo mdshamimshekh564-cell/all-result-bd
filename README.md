@@ -14,7 +14,7 @@
 
 ## লাইভ সাইট
 [https://all-result-bd.vercel.app](https://all-result-bd.vercel.app)
-
+https://all-result-bd.netlify.app/
 ## ভবিষ্যৎ পরিকল্পনা
 - মোবাইল অ্যাপ সংস্করণ
 - এসএমএসের মাধ্যমে রেজাল্ট পাঠানোর ব্যবস্থা
