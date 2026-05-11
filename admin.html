@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>অ্যাডমিন প্যানেল | All Result BD</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -14,162 +14,276 @@
         body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
         body.login-mode{display:flex;align-items:center;justify-content:center;padding:20px}
         body.admin-mode{display:block;padding:20px}
-        .admin-container{max-width:950px;width:100%;margin:0 auto}
-        .admin-header{background:linear-gradient(135deg,#1e293b,#334155);border:1px solid #475569;color:white;padding:24px;border-radius:20px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+        .admin-container{max-width:1000px;width:100%;margin:0 auto}
+        .admin-header{
+            background:linear-gradient(135deg,#1e293b,#334155);
+            border:1px solid #475569;color:white;padding:24px 28px;
+            border-radius:20px;margin-bottom:24px;
+            display:flex;justify-content:space-between;align-items:center;
+            flex-wrap:wrap;gap:16px
+        }
         .admin-header h1{font-size:1.8rem;color:#60a5fa}
-        .firebase-status{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:20px;font-size:.85rem;font-weight:600}
+        .firebase-status{
+            display:inline-flex;align-items:center;gap:8px;
+            padding:8px 16px;border-radius:20px;font-size:.85rem;font-weight:600
+        }
         .firebase-connected{background:#064e3b;color:#6ee7b7;border:1px solid #059669}
         .firebase-disconnected{background:#7f1d1d;color:#fca5a5;border:1px solid #dc2626}
-        .btn{padding:12px 20px;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:.95rem;transition:.3s;display:inline-flex;align-items:center;gap:8px}
+        .btn{
+            padding:12px 20px;border:none;border-radius:12px;cursor:pointer;
+            font-weight:600;font-size:.95rem;transition:.3s;
+            display:inline-flex;align-items:center;gap:8px
+        }
         .btn-save{background:#059669;color:white}.btn-save:hover{background:#047857;transform:translateY(-2px)}
         .btn-reset{background:#dc2626;color:white}.btn-reset:hover{background:#b91c1c}
         .btn-danger{background:#ef4444;color:white}.btn-danger:hover{background:#dc2626}
+        .btn-outline{background:transparent;border:1px solid #475569;color:#cbd5e1}.btn-outline:hover{background:#1e293b}
         .btn-sm{padding:8px 14px;font-size:.8rem;border-radius:8px}
         .btn-loading{opacity:.7;pointer-events:none}
-        .card{background:#1e293b;border:1px solid #334155;padding:24px;border-radius:20px;margin-bottom:20px}
+        .card{
+            background:#1e293b;border:1px solid #334155;
+            padding:24px 28px;border-radius:20px;margin-bottom:20px
+        }
         .card h2{margin-bottom:20px;color:#60a5fa;font-size:1.3rem;display:flex;align-items:center;gap:10px}
         .form-group{margin-bottom:16px}
         .form-group label{display:block;font-weight:600;margin-bottom:6px;color:#94a3b8}
-        .form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:1px solid #475569;border-radius:12px;font-size:1rem;outline:none;background:#0f172a;color:#e2e8f0}
-        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.1)}
+        .form-group input,.form-group textarea,.form-group select{
+            width:100%;padding:12px;border:1px solid #475569;
+            border-radius:12px;font-size:1rem;outline:none;
+            background:#0f172a;color:#e2e8f0
+        }
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+            border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.1)
+        }
         .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-        .toggle-group{display:flex;align-items:center;justify-content:space-between;padding:12px;background:#0f172a;border-radius:12px;margin-bottom:8px;border:1px solid #334155}
+        .toggle-group{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:14px 16px;background:#0f172a;border-radius:12px;
+            margin-bottom:10px;border:1px solid #334155
+        }
         .toggle-switch{position:relative;width:50px;height:28px}
         .toggle-switch input{opacity:0;width:0;height:0}
         .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#475569;transition:.3s;border-radius:34px}
         .slider:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background-color:white;transition:.3s;border-radius:50%}
         input:checked+.slider{background-color:#059669}
         input:checked+.slider:before{transform:translateX(22px)}
-        .ad-item{border:1px solid #334155;padding:16px;border-radius:12px;margin-bottom:12px;background:#0f172a}
-        .ad-item h3{margin-bottom:12px;color:#60a5fa;font-size:1rem}
-        .link-item{display:flex;align-items:center;gap:8px;padding:8px;background:#1e293b;border-radius:8px;margin-bottom:8px;flex-wrap:wrap}
-        .link-item input{flex:1;min-width:120px;padding:8px;border:1px solid #475569;border-radius:8px;background:#0f172a;color:#e2e8f0;font-size:.85rem}
-        .category-block{border:2px solid #334155;border-radius:16px;padding:16px;margin-bottom:16px;background:#0f172a}
-        .category-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-        .category-header input{flex:1;min-width:200px;padding:10px;border:1px solid #475569;border-radius:8px;background:#1e293b;color:#e2e8f0;font-size:.9rem}
-        .success-message{background:#064e3b;border:1px solid #059669;color:#6ee7b7;padding:14px;border-radius:12px;margin-bottom:16px;display:none;text-align:center}
-        .login-wrapper{width:100%;max-width:420px;margin:0 auto}
-        .login-box{background:#1e293b;border:2px solid #475569;padding:40px 30px;border-radius:24px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.5)}
+        .ad-item{border:1px solid #334155;padding:18px;border-radius:14px;margin-bottom:14px;background:#0f172a}
+        .ad-item h3{margin-bottom:14px;color:#60a5fa;font-size:1rem}
+        .ad-item-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .link-item{
+            display:flex;align-items:center;gap:10px;padding:10px;
+            background:#1e293b;border-radius:10px;margin-bottom:8px;flex-wrap:wrap
+        }
+        .link-item input{flex:1;min-width:120px;padding:10px;border:1px solid #475569;border-radius:8px;background:#0f172a;color:#e2e8f0;font-size:.85rem}
+        .category-block{
+            border:2px solid #334155;border-radius:18px;padding:18px;
+            margin-bottom:16px;background:#0f172a
+        }
+        .category-header{
+            display:flex;align-items:center;justify-content:space-between;
+            margin-bottom:14px;flex-wrap:wrap;gap:10px
+        }
+        .category-header input{
+            flex:1;min-width:200px;padding:12px;border:1px solid #475569;
+            border-radius:10px;background:#1e293b;color:#e2e8f0;font-size:.9rem
+        }
+        .success-message{
+            background:#064e3b;border:1px solid #059669;color:#6ee7b7;
+            padding:16px;border-radius:14px;margin-bottom:18px;display:none;text-align:center
+        }
+        .error-message{
+            background:#7f1d1d;border:1px solid #dc2626;color:#fca5a5;
+            padding:16px;border-radius:14px;margin-bottom:18px;display:none;text-align:center
+        }
+        .login-wrapper{width:100%;max-width:440px;margin:0 auto}
+        .login-box{
+            background:#1e293b;border:2px solid #475569;
+            padding:40px 32px;border-radius:24px;text-align:center;
+            box-shadow:0 20px 40px rgba(0,0,0,0.5)
+        }
         .login-box .login-icon{font-size:3.5rem;color:#60a5fa;margin-bottom:12px}
         .login-box h2{color:#60a5fa;margin-bottom:6px;font-size:1.6rem}
-        .login-box .login-subtitle{color:#94a3b8;margin-bottom:20px;font-size:0.9rem}
-        .login-box input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid #475569;background:#0f172a;color:white;font-size:1rem;margin-bottom:12px;outline:none}
+        .login-box .login-subtitle{color:#94a3b8;margin-bottom:22px;font-size:0.9rem}
+        .login-box input{
+            width:100%;padding:14px 16px;border-radius:12px;
+            border:1px solid #475569;background:#0f172a;color:white;
+            font-size:1rem;margin-bottom:12px;outline:none
+        }
         .login-box input:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,0.15)}
         .login-box .btn{width:100%;justify-content:center;padding:14px;font-size:1rem;margin-top:4px}
         .login-box .login-hint{color:#64748b;font-size:0.78rem;margin-top:14px}
-        .logout-btn{position:fixed;top:20px;right:20px;background:#dc2626;color:white;border:none;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:600;z-index:1000}
+        .logout-btn{
+            position:fixed;top:20px;right:20px;background:#dc2626;color:white;
+            border:none;padding:10px 18px;border-radius:25px;cursor:pointer;
+            font-weight:600;z-index:1000;box-shadow:0 4px 12px rgba(220,38,38,0.3)
+        }
         .logout-btn:hover{background:#b91c1c;transform:scale(1.05)}
         .sync-indicator{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px}
         .sync-active{background:#10b981;animation:pulse 2s infinite}
         .sync-inactive{background:#ef4444}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        @media(max-width:600px){.form-row{grid-template-columns:1fr}.admin-header{flex-direction:column;text-align:center}.login-box{padding:30px 20px}}
+        .tab-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+        .tab-btn{
+            padding:10px 18px;border-radius:12px;cursor:pointer;
+            font-weight:500;font-size:.9rem;background:#1e293b;
+            border:1px solid #334155;color:#cbd5e1;transition:.2s
+        }
+        .tab-btn.active{background:#2563eb;color:white;border-color:#2563eb}
+        .tab-content{display:none}
+        .tab-content.active{display:block}
+        @media(max-width:700px){
+            .form-row,.ad-item-grid{grid-template-columns:1fr}
+            .admin-header{flex-direction:column;text-align:center}
+            .login-box{padding:30px 20px}
+            .tab-btn{font-size:.8rem;padding:8px 14px}
+        }
     </style>
 </head>
 <body class="login-mode">
 
+<!-- লগইন স্ক্রিন -->
 <div id="loginScreen" class="login-wrapper">
     <div class="login-box">
         <div class="login-icon"><i class="fas fa-lock"></i></div>
         <h2>অ্যাডমিন প্যানেল</h2>
-        <p class="login-subtitle">GPA Calculator BD নিয়ন্ত্রণ</p>
+        <p class="login-subtitle"> All Result BD নিয়ন্ত্রণ</p>
         <input type="email" id="adminEmail" placeholder="অ্যাডমিন ইমেইল" value="Mdshamimshekh965@gmail.com" autocomplete="email">
         <input type="password" id="adminPassword" placeholder="পাসওয়ার্ড লিখুন" autocomplete="off">
         <button class="btn btn-save" onclick="verifyPassword()"><i class="fas fa-sign-in-alt"></i> লগইন করুন</button>
-        <p class="login-hint">Firebase Authentication দিয়ে লগইন করুন<br><span id="firebaseLoginStatus" style="font-size:0.75rem;"></span></p>
+        <p class="login-hint" id="firebaseLoginStatus">Firebase Authentication দিয়ে লগইন করুন</p>
     </div>
 </div>
 
+<!-- অ্যাডমিন কন্টেন্ট -->
 <div id="adminContent" style="display:none;">
     <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
     <div class="admin-container">
         <div class="admin-header">
-            <div><h1><i class="fas fa-cog"></i> অ্যাডমিন প্যানেল</h1><p><span id="firebaseConnectionStatus" class="firebase-status firebase-disconnected"><span class="sync-indicator sync-inactive"></span> Firebase সংযোগ হচ্ছে...</span></p></div>
-            <button class="btn btn-save" onclick="saveConfig()">সব সেভ করুন</button>
-        </div>
-        <div id="successMessage" class="success-message"><span id="successText"></span></div>
-
-        <!-- সাধারণ সেটিংস -->
-        <div class="card">
-            <h2>সাধারণ সেটিংস</h2>
-            <div class="form-row"><div class="form-group"><label>অ্যাপের নাম</label><input type="text" id="appName"></div><div class="form-group"><label>সাবটাইটেল</label><input type="text" id="appSubtitle"></div></div>
-            <div class="form-group"><label>ফুটার</label><input type="text" id="footerText"></div>
-            <div class="form-group"><label>লোকাল পাসওয়ার্ড পরিবর্তন</label><input type="text" id="newPassword" placeholder="পরিবর্তন করতে চাইলে"></div>
-        </div>
-
-        <!-- সরকারি রেজাল্ট -->
-        <div class="card">
-            <h2>সরকারি রেজাল্ট</h2>
-            <div class="toggle-group"><span>সক্রিয়</span><label class="toggle-switch"><input type="checkbox" id="govtEnabled" checked><span class="slider"></span></label></div>
-            <div class="form-group"><label>লেবেল</label><input type="text" id="govtLabel"></div>
-            <div class="form-group"><label>URL</label><input type="text" id="govtUrl"></div>
-        </div>
-
-        <!-- ফিচার টগল -->
-        <div class="card">
-            <h2>ফিচার টগল</h2>
-            <div class="toggle-group"><span>বিজ্ঞাপন</span><label class="toggle-switch"><input type="checkbox" id="enableAds" checked><span class="slider"></span></label></div>
-            <div class="toggle-group"><span>হিস্টরি</span><label class="toggle-switch"><input type="checkbox" id="enableHistory" checked><span class="slider"></span></label></div>
-            <div class="toggle-group"><span>ডার্ক মোড</span><label class="toggle-switch"><input type="checkbox" id="enableDarkMode" checked><span class="slider"></span></label></div>
-            <div class="toggle-group"><span>অপশনাল সাবজেক্ট</span><label class="toggle-switch"><input type="checkbox" id="enableOptionalSubject" checked><span class="slider"></span></label></div>
-            <div class="toggle-group"><span>ডুপ্লিকেট চেক</span><label class="toggle-switch"><input type="checkbox" id="enableDuplicateCheck" checked><span class="slider"></span></label></div>
-            <div class="form-group"><label>সর্বোচ্চ হিস্টরি</label><input type="number" id="maxHistoryItems" value="50"></div>
-        </div>
-
-        <!-- কন্টেন্ট ম্যানেজমেন্ট (নতুন) -->
-        <div class="card">
-            <h2><i class="fas fa-file-alt"></i> কন্টেন্ট ম্যানেজমেন্ট</h2>
-            <p style="color:#94a3b8; margin-bottom:16px;">Contact Us, About Us ও Privacy Policy এর তথ্য পরিবর্তন করুন।</p>
-
-            <h3 style="color:#60a5fa; margin:16px 0 8px;">Contact Us</h3>
-            <div class="form-row">
-                <div class="form-group"><label>ইমেইল</label><input type="text" id="contactEmail" value="Mdshamimshekh965@gmail.com"></div>
-                <div class="form-group"><label>ফোন/হোয়াটসঅ্যাপ</label><input type="text" id="contactPhone" value="+8801XXXXXXXXX"></div>
+            <div>
+                <h1><i class="fas fa-cog"></i> অ্যাডমিন প্যানেল</h1>
+                <p><span id="firebaseConnectionStatus" class="firebase-status firebase-disconnected"><span class="sync-indicator sync-inactive"></span> Firebase সংযোগ হচ্ছে...</span></p>
             </div>
-            <div class="form-group"><label>ঠিকানা</label><input type="text" id="contactAddress" value="বাংলাদেশ"></div>
-
-            <h3 style="color:#60a5fa; margin:16px 0 8px;">About Us</h3>
-            <div class="form-group"><label>শিরোনাম</label><input type="text" id="aboutTitle" value="About GPA Calculator BD"></div>
-            <div class="form-group"><label>বিবরণ (HTML অনুমোদিত)</label><textarea id="aboutDesc" rows="4">স্বাগতম! GPA Calculator BD একটি সম্পূর্ণ বিনামূল্যের অনলাইন টুল...</textarea></div>
-            <div class="form-row">
-                <div class="form-group"><label>ডেভেলপারের নাম</label><input type="text" id="aboutDeveloper" value="Md Shamim Sheikh"></div>
-                <div class="form-group"><label>ভার্সন</label><input type="text" id="aboutVersion" value="v3.0"></div>
-            </div>
-
-            <h3 style="color:#60a5fa; margin:16px 0 8px;">Privacy Policy</h3>
-            <div class="form-group"><label>শেষ আপডেট</label><input type="text" id="privacyUpdated" value="৭ মে, ২০২৬"></div>
-            <div class="form-group"><label>কন্টেন্ট (HTML অনুমোদিত)</label><textarea id="privacyContent" rows="6">Privacy Policy এর সম্পূর্ণ বিবরণ...</textarea></div>
+            <button class="btn btn-save" onclick="saveConfig()"><i class="fas fa-save"></i> সব সেভ করুন</button>
         </div>
 
-        <!-- পড়াশোনার লিংক -->
-        <div class="card"><h2>পড়াশোনার লিংক</h2><div id="studyLinksAdmin"></div><button class="btn btn-save btn-sm" onclick="addCategory()" style="margin-top:12px;">+ নতুন ক্যাটাগরি</button></div>
+        <div id="successMessage" class="success-message"><i class="fas fa-check-circle"></i> <span id="successText"></span></div>
+        <div id="errorMessage" class="error-message"><i class="fas fa-exclamation-circle"></i> <span id="errorText"></span></div>
+
+        <!-- ট্যাব -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('general')"><i class="fas fa-sliders-h"></i> সাধারণ</button>
+            <button class="tab-btn" onclick="switchTab('content')"><i class="fas fa-file-alt"></i> কন্টেন্ট</button>
+            <button class="tab-btn" onclick="switchTab('subjects')"><i class="fas fa-book"></i> সাবজেক্ট</button>
+            <button class="tab-btn" onclick="switchTab('links')"><i class="fas fa-link"></i> লিংক</button>
+            <button class="tab-btn" onclick="switchTab('ads')"><i class="fas fa-ad"></i> বিজ্ঞাপন</button>
+        </div>
+
+        <!-- সাধারণ -->
+        <div id="tab-general" class="tab-content active">
+            <div class="card">
+                <h2>সাধারণ সেটিংস</h2>
+                <div class="form-row">
+                    <div class="form-group"><label>অ্যাপের নাম</label><input type="text" id="appName"></div>
+                    <div class="form-group"><label>সাবটাইটেল</label><input type="text" id="appSubtitle"></div>
+                </div>
+                <div class="form-group"><label>ফুটার টেক্সট</label><input type="text" id="footerText"></div>
+                <div class="form-group"><label>লোকাল পাসওয়ার্ড পরিবর্তন</label><input type="text" id="newPassword" placeholder="পরিবর্তন করতে চাইলে"></div>
+            </div>
+            <div class="card">
+                <h2>সরকারি রেজাল্ট</h2>
+                <div class="toggle-group"><span>সক্রিয়</span><label class="toggle-switch"><input type="checkbox" id="govtEnabled" checked><span class="slider"></span></label></div>
+                <div class="form-group"><label>লেবেল</label><input type="text" id="govtLabel"></div>
+                <div class="form-group"><label>URL</label><input type="text" id="govtUrl"></div>
+            </div>
+            <div class="card">
+                <h2>ফিচার টগল</h2>
+                <div class="toggle-group"><span>বিজ্ঞাপন</span><label class="toggle-switch"><input type="checkbox" id="enableAds" checked><span class="slider"></span></label></div>
+                <div class="toggle-group"><span>হিস্টরি</span><label class="toggle-switch"><input type="checkbox" id="enableHistory" checked><span class="slider"></span></label></div>
+                <div class="toggle-group"><span>ডার্ক মোড</span><label class="toggle-switch"><input type="checkbox" id="enableDarkMode" checked><span class="slider"></span></label></div>
+                <div class="toggle-group"><span>অপশনাল সাবজেক্ট</span><label class="toggle-switch"><input type="checkbox" id="enableOptionalSubject" checked><span class="slider"></span></label></div>
+                <div class="toggle-group"><span>ডুপ্লিকেট চেক</span><label class="toggle-switch"><input type="checkbox" id="enableDuplicateCheck" checked><span class="slider"></span></label></div>
+                <div class="form-group"><label>সর্বোচ্চ হিস্টরি</label><input type="number" id="maxHistoryItems" value="50" min="5" max="200"></div>
+            </div>
+        </div>
+
+        <!-- কন্টেন্ট -->
+        <div id="tab-content" class="tab-content">
+            <div class="card">
+                <h2>Contact Us</h2>
+                <div class="form-row">
+                    <div class="form-group"><label>ইমেইল</label><input type="text" id="contactEmail" value="Mdshamimshekh965@gmail.com"></div>
+                    <div class="form-group"><label>ফোন/হোয়াটসঅ্যাপ</label><input type="text" id="contactPhone" value="+8801XXXXXXXXX"></div>
+                </div>
+                <div class="form-group"><label>ঠিকানা</label><input type="text" id="contactAddress" value="বাংলাদেশ"></div>
+            </div>
+            <div class="card">
+                <h2>About Us</h2>
+                <div class="form-group"><label>শিরোনাম</label><input type="text" id="aboutTitle" value="About GPA Calculator BD"></div>
+                <div class="form-group"><label>বিবরণ (HTML অনুমোদিত)</label><textarea id="aboutDesc" rows="4">স্বাগতম! GPA Calculator BD একটি সম্পূর্ণ বিনামূল্যের অনলাইন টুল...</textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label>ডেভেলপার</label><input type="text" id="aboutDeveloper" value="Md Shamim Sheikh"></div>
+                    <div class="form-group"><label>ভার্সন</label><input type="text" id="aboutVersion" value="v3.0"></div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Privacy Policy</h2>
+                <div class="form-group"><label>শেষ আপডেট</label><input type="text" id="privacyUpdated" value="৭ মে, ২০২৬"></div>
+                <div class="form-group"><label>কন্টেন্ট (HTML অনুমোদিত)</label><textarea id="privacyContent" rows="6">Privacy Policy এর সম্পূর্ণ বিবরণ...</textarea></div>
+            </div>
+        </div>
+
+        <!-- সাবজেক্ট -->
+        <div id="tab-subjects" class="tab-content">
+            <div class="card">
+                <h2>ক্লাস ও সাবজেক্ট</h2>
+                <div class="form-row">
+                    <div class="form-group"><label>ক্লাস নির্বাচন</label>
+                        <select id="editClassSelect">
+                            <option value="psc">PSC</option><option value="jsc">JSC</option><option value="ssc">SSC</option>
+                            <option value="hsc">HSC</option><option value="honours">অনার্স</option><option value="masters">মাস্টার্স</option>
+                            <option value="custom">কাস্টম</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>প্রদর্শন নাম</label><input type="text" id="editClassName"></div>
+                </div>
+                <div class="form-group"><label>সাবজেক্ট (কমা দিয়ে আলাদা)</label><textarea id="editSubjects" rows="3"></textarea></div>
+                <button class="btn btn-save" onclick="updateSubjects()">এই ক্লাস আপডেট</button>
+                <div id="subjectPreview" style="margin-top:16px;padding:12px;background:#0f172a;border-radius:10px;border:1px solid #334155;max-height:300px;overflow-y:auto;font-size:0.9rem;color:#94a3b8;"></div>
+            </div>
+        </div>
+
+        <!-- লিংক -->
+        <div id="tab-links" class="tab-content">
+            <div class="card">
+                <h2>পড়াশোনার লিংক</h2>
+                <div id="studyLinksAdmin"></div>
+                <button class="btn btn-save btn-sm" onclick="addCategory()" style="margin-top:14px;">+ নতুন ক্যাটাগরি</button>
+            </div>
+        </div>
 
         <!-- বিজ্ঞাপন -->
-        <div class="card"><h2>বিজ্ঞাপন</h2><div id="adSettings"></div></div>
-
-        <!-- অ্যাড নেটওয়ার্ক -->
-        <div class="card"><h2>অ্যাড নেটওয়ার্ক</h2>
-            <div class="form-group"><label>PropellerAds</label><input type="text" id="propellerScript"></div>
-            <div class="form-group"><label>Adsterra</label><input type="text" id="adsterraScript"></div>
-            <div class="form-group"><label>Monetag</label><input type="text" id="monetagScript"></div>
-            <div class="form-group"><label>Clickadu</label><input type="text" id="clickaduScript"></div>
+        <div id="tab-ads" class="tab-content">
+            <div class="card">
+                <h2>বিজ্ঞাপন সেটিংস</h2>
+                <div id="adSettings"></div>
+            </div>
+            <div class="card">
+                <h2>অ্যাড নেটওয়ার্ক স্ক্রিপ্ট</h2>
+                <div class="form-group"><label>PropellerAds</label><input type="text" id="propellerScript"></div>
+                <div class="form-group"><label>Adsterra</label><input type="text" id="adsterraScript"></div>
+                <div class="form-group"><label>Monetag</label><input type="text" id="monetagScript"></div>
+                <div class="form-group"><label>Clickadu</label><input type="text" id="clickaduScript"></div>
+            </div>
         </div>
 
-        <!-- ক্লাস ও সাবজেক্ট -->
-        <div class="card">
-            <h2><i class="fas fa-edit"></i> ক্লাস ও সাবজেক্ট</h2>
-            <select id="editClassSelect"><option value="psc">PSC</option><option value="jsc">JSC</option><option value="ssc">SSC</option><option value="hsc">HSC</option><option value="honours">অনার্স</option><option value="masters">মাস্টার্স</option><option value="custom">কাস্টম</option></select>
-            <div class="form-group"><label>নাম</label><input type="text" id="editClassName"></div>
-            <div class="form-group"><label>সাবজেক্ট</label><textarea id="editSubjects" rows="3"></textarea></div>
-            <button class="btn btn-save btn-sm" onclick="updateSubjects()">আপডেট</button>
-        </div>
-
-        <button class="btn btn-save" onclick="saveConfig()" style="width:100%;">সব সেভ করুন</button>
+        <button class="btn btn-save" onclick="saveConfig()" style="width:100%;padding:16px;font-size:1.1rem;">Firebase-এ সব সেভ করুন</button>
+        <button class="btn btn-outline" onclick="saveLocalOnly()" style="width:100%;margin-top:10px;">লোকালে সেভ করুন (Firebase ছাড়া)</button>
         <button class="btn btn-reset" onclick="resetConfig()" style="width:100%;margin-top:10px;">ডিফল্টে ফিরুন</button>
     </div>
 </div>
 
 <script>
+    // Firebase init
     const firebaseConfig = {
         apiKey: "AIzaSyDNKVhE-a9-C_YHf5R-lhwsidcirvpacG8",
         authDomain: "all-result-27c50.firebaseapp.com",
@@ -184,9 +298,7 @@
     const auth = firebase.auth();
 
     let isFirebaseConnected = false;
-    db.enableNetwork().then(()=>{isFirebaseConnected=true;updateFirebaseStatus(true);}).catch(()=>updateFirebaseStatus(false));
-
-    function updateFirebaseStatus(c){const el=document.getElementById('firebaseConnectionStatus');el.className=c?'firebase-status firebase-connected':'firebase-status firebase-disconnected';el.innerHTML=c?'<span class="sync-indicator sync-active"></span> Firebase ক্লাউড':'<span class="sync-indicator sync-inactive"></span> Firebase অফলাইন';}
+    let adminConfig = {};
 
     const DEFAULT_CONFIG = {
         appName:'GPA Calculator BD',appSubtitle:'সকল শ্রেণীর রেজাল্ট ক্যালকুলেটর',footerText:'© 2026 GPA Calculator BD',
@@ -197,24 +309,52 @@
         aboutContent:{title:'About GPA Calculator BD',desc:'স্বাগতম! GPA Calculator BD একটি সম্পূর্ণ বিনামূল্যের অনলাইন টুল...',developer:'Md Shamim Sheikh',version:'v3.0'},
         privacyContent:{updated:'৭ মে, ২০২৬',content:'Privacy Policy এর সম্পূর্ণ বিবরণ...'},
         studyLinks:[
-            {category:'📚 শিক্ষা বোর্ড ও রেজাল্ট',links:[{label:'অফিসিয়াল রেজাল্ট সাইট',url:'http://www.educationboardresults.gov.bd'},{label:'ঢাকা শিক্ষা বোর্ড',url:'http://www.dhakaeducationboard.gov.bd'},{label:'এনসিটিবি (NCTB)',url:'http://nctb.gov.bd'}]},
-            {category:'🎓 ফ্রি অনলাইন কোর্স',links:[{label:'মুক্তপাঠ',url:'https://muktopaath.gov.bd'},{label:'টেন মিনিট স্কুল',url:'https://10minuteschool.com'}]}
+            {category:'📚 শিক্ষা বোর্ড',links:[{label:'অফিসিয়াল রেজাল্ট',url:'http://www.educationboardresults.gov.bd'},{label:'ঢাকা বোর্ড',url:'http://www.dhakaeducationboard.gov.bd'}]},
+            {category:'🎓 কোর্স',links:[{label:'মুক্তপাঠ',url:'https://muktopaath.gov.bd'},{label:'টেন মিনিট স্কুল',url:'https://10minuteschool.com'}]}
         ],
-        ads:[{id:1,type:'fallback',content:'',link:'',enabled:true,fallback:'Google Ad'},{id:2,type:'fallback',content:'',link:'',enabled:true,fallback:'ইন্টারস্টিশিয়াল'},{id:3,type:'fallback',content:'',link:'',enabled:true,fallback:'PropellerAds'},{id:4,type:'fallback',content:'',link:'',enabled:true,fallback:'PropellerAds Native'},{id:5,type:'fallback',content:'',link:'',enabled:true,fallback:'Adsterra'}],
+        ads:[
+            {id:1,type:'fallback',content:'',link:'',enabled:true,fallback:'Google Ad'},
+            {id:2,type:'fallback',content:'',link:'',enabled:true,fallback:'ইন্টারস্টিশিয়াল'},
+            {id:3,type:'fallback',content:'',link:'',enabled:true,fallback:'PropellerAds'},
+            {id:4,type:'fallback',content:'',link:'',enabled:true,fallback:'PropellerAds Native'},
+            {id:5,type:'fallback',content:'',link:'',enabled:true,fallback:'Adsterra'}
+        ],
         adScripts:{propeller:'',adsterra:'',monetag:'',clickadu:''},
-        classSubjects:{psc:{name:'PSC',subjects:['বাংলা','ইংরেজি','গণিত']},ssc:{name:'SSC',subjects:['বাংলা','ইংরেজি','গণিত']},hsc:{name:'HSC',subjects:['বাংলা','ইংরেজি']},honours:{name:'অনার্স',subjects:['বাংলা','ইংরেজি']},masters:{name:'মাস্টার্স',subjects:['থিসিস']},custom:{name:'কাস্টম',subjects:['বিষয় ১']}}
+        classSubjects:{
+            psc:{name:'PSC',subjects:['বাংলা','ইংরেজি','গণিত','বিজ্ঞান','বাংলাদেশ ও বিশ্বপরিচয়','ধর্ম']},
+            jsc:{name:'JSC',subjects:['বাংলা','ইংরেজি','গণিত','বিজ্ঞান','ICT','বাংলাদেশ ও বিশ্বপরিচয়','ধর্ম']},
+            ssc:{name:'SSC',subjects:['বাংলা','ইংরেজি','গণিত','পদার্থ','রসায়ন','জীববিজ্ঞান','ICT']},
+            hsc:{name:'HSC',subjects:['বাংলা','ইংরেজি','পদার্থ','রসায়ন','উচ্চতর গণিত','জীববিজ্ঞান','ICT']},
+            honours:{name:'অনার্স',subjects:['বাংলা','ইংরেজি','প্রধান ১','প্রধান ২','প্রধান ৩','অপ্রধান ১','অপ্রধান ২']},
+            masters:{name:'মাস্টার্স',subjects:['প্রধান ১','প্রধান ২','প্রধান ৩','প্রধান ৪','থিসিস','ভাইভা']},
+            custom:{name:'কাস্টম',subjects:['বিষয় ১','বিষয় ২','বিষয় ৩','বিষয় ৪']}
+        }
     };
-    let adminConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-    let isLoggedIn = false;
 
-    async function loadConfig() {
-        if(isFirebaseConnected){try{const doc=await db.collection('adminConfig').doc('globalConfig').get();if(doc.exists){const d=doc.data();adminConfig={...DEFAULT_CONFIG,...d};if(d.classSubjects)adminConfig.classSubjects={...DEFAULT_CONFIG.classSubjects,...d.classSubjects};}}catch(e){}}
-        const saved=localStorage.getItem('gpaAdminConfig');if(saved)try{const p=JSON.parse(saved);adminConfig={...DEFAULT_CONFIG,...p};if(p.classSubjects)adminConfig.classSubjects={...DEFAULT_CONFIG.classSubjects,...p.classSubjects};}catch(e){}
+    // Firebase connection monitor
+    function updateFirebaseStatus(c){
+        const el=document.getElementById('firebaseConnectionStatus');
+        el.className=c?'firebase-status firebase-connected':'firebase-status firebase-disconnected';
+        el.innerHTML=c?'<span class="sync-indicator sync-active"></span> Firebase ক্লাউড সংযুক্ত':'<span class="sync-indicator sync-inactive"></span> Firebase অফলাইন (লোকাল)';
+    }
+    db.enableNetwork().then(()=>{isFirebaseConnected=true;updateFirebaseStatus(true);}).catch(()=>{isFirebaseConnected=false;updateFirebaseStatus(false);});
+    setInterval(async()=>{try{await db.collection('adminConfig').doc('globalConfig').get();isFirebaseConnected=true;}catch(e){isFirebaseConnected=false;}updateFirebaseStatus(isFirebaseConnected);},10000);
+
+    // Load config
+    async function loadConfig(){
+        if(isFirebaseConnected){
+            try{
+                const doc=await db.collection('adminConfig').doc('globalConfig').get();
+                if(doc.exists){const d=doc.data();adminConfig={...DEFAULT_CONFIG,...d};if(d.classSubjects)adminConfig.classSubjects={...DEFAULT_CONFIG.classSubjects,...d.classSubjects};localStorage.setItem('gpaAdminConfig',JSON.stringify(adminConfig));return;}
+            }catch(e){}
+        }
+        const saved=localStorage.getItem('gpaAdminConfig');
+        if(saved){try{const p=JSON.parse(saved);adminConfig={...DEFAULT_CONFIG,...p};if(p.classSubjects)adminConfig.classSubjects={...DEFAULT_CONFIG.classSubjects,...p.classSubjects};}catch(e){}}
         if(!adminConfig.adminPassword)adminConfig.adminPassword=DEFAULT_CONFIG.adminPassword;
-        if(!adminConfig.classSubjects || Object.keys(adminConfig.classSubjects).length===0)adminConfig.classSubjects=JSON.parse(JSON.stringify(DEFAULT_CONFIG.classSubjects));
     }
 
-    function populateForm() {
+    // Populate UI
+    function populateForm(){
         document.getElementById('appName').value=adminConfig.appName||'';
         document.getElementById('appSubtitle').value=adminConfig.appSubtitle||'';
         document.getElementById('footerText').value=adminConfig.footerText||'';
@@ -227,11 +367,6 @@
         document.getElementById('enableOptionalSubject').checked=adminConfig.enableOptionalSubject===true;
         document.getElementById('enableDuplicateCheck').checked=adminConfig.enableDuplicateCheck===true;
         document.getElementById('maxHistoryItems').value=adminConfig.maxHistoryItems||50;
-        document.getElementById('propellerScript').value=adminConfig.adScripts?.propeller||'';
-        document.getElementById('adsterraScript').value=adminConfig.adScripts?.adsterra||'';
-        document.getElementById('monetagScript').value=adminConfig.adScripts?.monetag||'';
-        document.getElementById('clickaduScript').value=adminConfig.adScripts?.clickadu||'';
-        // কন্টেন্ট
         document.getElementById('contactEmail').value=adminConfig.contactContent?.email||'';
         document.getElementById('contactPhone').value=adminConfig.contactContent?.phone||'';
         document.getElementById('contactAddress').value=adminConfig.contactContent?.address||'';
@@ -241,27 +376,97 @@
         document.getElementById('aboutVersion').value=adminConfig.aboutContent?.version||'';
         document.getElementById('privacyUpdated').value=adminConfig.privacyContent?.updated||'';
         document.getElementById('privacyContent').value=adminConfig.privacyContent?.content||'';
-        buildAdForms();populateAdValues();renderStudyLinksAdmin();
+        document.getElementById('propellerScript').value=adminConfig.adScripts?.propeller||'';
+        document.getElementById('adsterraScript').value=adminConfig.adScripts?.adsterra||'';
+        document.getElementById('monetagScript').value=adminConfig.adScripts?.monetag||'';
+        document.getElementById('clickaduScript').value=adminConfig.adScripts?.clickadu||'';
+        buildAdForms();populateAdValues();renderStudyLinksAdmin();updateSubjectPreview();
         document.getElementById('editClassSelect').dispatchEvent(new Event('change'));
     }
 
-    function buildAdForms(){const c=document.getElementById('adSettings');c.innerHTML='';adminConfig.ads.forEach(ad=>{const d=document.createElement('div');d.className='ad-item';d.innerHTML=`<h3>স্থান ${ad.id}</h3><div class="form-row"><div class="form-group"><label>টাইপ</label><select class="ad-type" data-id="${ad.id}"><option value="fallback">ফলব্যাক</option><option value="image">ইমেজ</option><option value="script">স্ক্রিপ্ট</option></select></div><div class="form-group"><label>সক্রিয়</label><select class="ad-enabled" data-id="${ad.id}"><option value="true">হ্যাঁ</option><option value="false">না</option></select></div></div><div class="form-group"><label>ইমেজ/স্ক্রিপ্ট</label><input class="ad-content" data-id="${ad.id}"></div><div class="form-group"><label>ক্লিক লিংক</label><input class="ad-link" data-id="${ad.id}"></div><div class="form-group"><label>ফলব্যাক</label><input class="ad-fallback" data-id="${ad.id}"></div>`;c.appendChild(d);});}
-    function populateAdValues(){adminConfig.ads.forEach(ad=>{document.querySelector(`.ad-type[data-id="${ad.id}"]`).value=ad.type;document.querySelector(`.ad-enabled[data-id="${ad.id}"]`).value=ad.enabled.toString();document.querySelector(`.ad-content[data-id="${ad.id}"]`).value=ad.content||'';document.querySelector(`.ad-link[data-id="${ad.id}"]`).value=ad.link||'';document.querySelector(`.ad-fallback[data-id="${ad.id}"]`).value=ad.fallback||'';});}
+    // Subjects
+    document.getElementById('editClassSelect').addEventListener('change',function(){
+        const key=this.value;const data=adminConfig.classSubjects[key]||{name:'',subjects:[]};
+        document.getElementById('editClassName').value=data.name||'';
+        document.getElementById('editSubjects').value=(data.subjects||[]).join(', ');
+    });
+    function updateSubjectPreview(){
+        const key=document.getElementById('editClassSelect').value;
+        const data=adminConfig.classSubjects[key];
+        document.getElementById('subjectPreview').innerHTML=data?`<strong style="color:#60a5fa;">${data.name}</strong><br>${data.subjects.join(', ')}`:'';
+    }
+    window.updateSubjects=function(){
+        const key=document.getElementById('editClassSelect').value;
+        const name=document.getElementById('editClassName').value.trim();
+        const subjects=document.getElementById('editSubjects').value.split(',').map(s=>s.trim()).filter(s=>s);
+        if(!name||!subjects.length)return alert('নাম ও সাবজেক্ট দিন');
+        adminConfig.classSubjects[key]={name,subjects};
+        updateSubjectPreview();
+        alert('আপডেট হয়েছে, সেভ করুন');
+    };
 
-    function renderStudyLinksAdmin(){const c=document.getElementById('studyLinksAdmin');c.innerHTML='';if(!adminConfig.studyLinks)adminConfig.studyLinks=[];adminConfig.studyLinks.forEach((cat,i)=>{const b=document.createElement('div');b.className='category-block';b.innerHTML=`<div class="category-header"><input type="text" class="cat-name" value="${cat.category}" placeholder="ক্যাটাগরি নাম"><button class="btn btn-danger btn-sm" onclick="deleteCategory(${i})"><i class="fas fa-trash"></i></button></div><div class="cat-links" data-cat="${i}"></div><button class="btn btn-save btn-sm" onclick="addLink(${i})" style="margin-top:8px;">+ লিংক</button>`;c.appendChild(b);renderLinksInCategory(i);});}
-    function renderLinksInCategory(i){const cat=adminConfig.studyLinks[i];const d=document.querySelector(`.cat-links[data-cat="${i}"]`);if(!d)return;d.innerHTML='';if(!cat.links)cat.links=[];cat.links.forEach((l,j)=>{const item=document.createElement('div');item.className='link-item';item.innerHTML=`<input type="text" class="link-label" value="${l.label}" placeholder="লেবেল"><input type="text" class="link-url" value="${l.url}" placeholder="URL"><button class="btn btn-danger btn-sm" onclick="deleteLink(${i},${j})"><i class="fas fa-times"></i></button>`;d.appendChild(item);});}
+    // Ads
+    function buildAdForms(){
+        const c=document.getElementById('adSettings');c.innerHTML='';
+        adminConfig.ads.forEach(ad=>{
+            const d=document.createElement('div');d.className='ad-item';
+            d.innerHTML=`<h3>স্থান #${ad.id}</h3><div class="ad-item-grid"><div class="form-group"><label>টাইপ</label><select class="ad-type" data-id="${ad.id}"><option value="fallback">ফলব্যাক</option><option value="image">ইমেজ</option><option value="script">স্ক্রিপ্ট</option></select></div><div class="form-group"><label>সক্রিয়</label><select class="ad-enabled" data-id="${ad.id}"><option value="true">হ্যাঁ</option><option value="false">না</option></select></div></div><div class="form-group"><label>ইমেজ/স্ক্রিপ্ট</label><input class="ad-content" data-id="${ad.id}"></div><div class="form-group"><label>ক্লিক লিংক</label><input class="ad-link" data-id="${ad.id}"></div><div class="form-group"><label>ফলব্যাক</label><input class="ad-fallback" data-id="${ad.id}"></div>`;
+            c.appendChild(d);
+        });
+    }
+    function populateAdValues(){
+        adminConfig.ads.forEach(ad=>{
+            document.querySelector(`.ad-type[data-id="${ad.id}"]`).value=ad.type;
+            document.querySelector(`.ad-enabled[data-id="${ad.id}"]`).value=ad.enabled.toString();
+            document.querySelector(`.ad-content[data-id="${ad.id}"]`).value=ad.content||'';
+            document.querySelector(`.ad-link[data-id="${ad.id}"]`).value=ad.link||'';
+            document.querySelector(`.ad-fallback[data-id="${ad.id}"]`).value=ad.fallback||'';
+        });
+    }
+    function collectAdValues(){
+        adminConfig.ads=adminConfig.ads.map(ad=>({
+            ...ad,
+            type:document.querySelector(`.ad-type[data-id="${ad.id}"]`).value,
+            enabled:document.querySelector(`.ad-enabled[data-id="${ad.id}"]`).value==='true',
+            content:document.querySelector(`.ad-content[data-id="${ad.id}"]`).value,
+            link:document.querySelector(`.ad-link[data-id="${ad.id}"]`).value,
+            fallback:document.querySelector(`.ad-fallback[data-id="${ad.id}"]`).value
+        }));
+    }
+
+    // Study links
+    function renderStudyLinksAdmin(){
+        const c=document.getElementById('studyLinksAdmin');c.innerHTML='';
+        adminConfig.studyLinks.forEach((cat,i)=>{
+            const b=document.createElement('div');b.className='category-block';
+            b.innerHTML=`<div class="category-header"><input class="cat-name" value="${cat.category}"><button class="btn btn-danger btn-sm" onclick="deleteCategory(${i})">মুছুন</button></div><div class="cat-links" data-cat="${i}"></div><button class="btn btn-save btn-sm" onclick="addLink(${i})" style="margin-top:8px;">+ লিংক</button>`;
+            c.appendChild(b);renderLinksInCategory(i);
+        });
+    }
+    function renderLinksInCategory(i){
+        const cat=adminConfig.studyLinks[i];const d=document.querySelector(`.cat-links[data-cat="${i}"]`);if(!d)return;d.innerHTML='';
+        cat.links.forEach((l,j)=>{
+            const item=document.createElement('div');item.className='link-item';
+            item.innerHTML=`<input class="link-label" value="${l.label}"><input class="link-url" value="${l.url}"><button class="btn btn-danger btn-sm" onclick="deleteLink(${i},${j})">x</button>`;
+            d.appendChild(item);
+        });
+    }
     window.addCategory=function(){adminConfig.studyLinks.push({category:'নতুন ক্যাটাগরি',links:[]});renderStudyLinksAdmin();};
     window.deleteCategory=function(i){if(confirm('মুছবেন?')){adminConfig.studyLinks.splice(i,1);renderStudyLinksAdmin();}};
-    window.addLink=function(i){adminConfig.studyLinks[i].links.push({label:'নতুন লিংক',url:'https://'});renderLinksInCategory(i);};
+    window.addLink=function(i){adminConfig.studyLinks[i].links.push({label:'নতুন',url:'https://'});renderLinksInCategory(i);};
     window.deleteLink=function(i,j){adminConfig.studyLinks[i].links.splice(j,1);renderLinksInCategory(i);};
+    function collectStudyLinks(){
+        adminConfig.studyLinks.forEach((cat,i)=>{
+            const n=document.querySelectorAll('.cat-name')[i];if(n)cat.category=n.value.trim();
+            const ls=document.querySelectorAll(`.cat-links[data-cat="${i}"] .link-label`);
+            const us=document.querySelectorAll(`.cat-links[data-cat="${i}"] .link-url`);
+            cat.links=[];for(let k=0;k<ls.length;k++){const l=ls[k].value.trim(),u=us[k].value.trim();if(l&&u)cat.links.push({label:l,url:u});}
+        });
+    }
 
-    function collectStudyLinksFromUI(){adminConfig.studyLinks.forEach((cat,i)=>{const n=document.querySelectorAll('.cat-name')[i];if(n)cat.category=n.value.trim();const ls=document.querySelectorAll(`.cat-links[data-cat="${i}"] .link-label`);const us=document.querySelectorAll(`.cat-links[data-cat="${i}"] .link-url`);cat.links=[];for(let k=0;k<ls.length;k++){const label=ls[k].value.trim(),url=us[k].value.trim();if(label&&url)cat.links.push({label,url});}});}
-
-    document.getElementById('editClassSelect').addEventListener('change',function(){const d=adminConfig.classSubjects[this.value];document.getElementById('editClassName').value=d.name;document.getElementById('editSubjects').value=d.subjects.join(', ');});
-    function updateSubjects(){const k=document.getElementById('editClassSelect').value;const n=document.getElementById('editClassName').value.trim();const s=document.getElementById('editSubjects').value.split(',').map(x=>x.trim()).filter(x=>x);if(!n||s.length===0){alert('নাম ও সাবজেক্ট দিন');return;}adminConfig.classSubjects[k]={name:n,subjects:s};alert('আপডেট হয়েছে, সেভ করুন।');}
-
+    // Save
     async function saveConfig(){
-        document.querySelectorAll('.btn-save').forEach(b=>{b.classList.add('btn-loading');b.innerHTML='<i class="fas fa-spinner fa-spin"></i> সংরক্ষণ...';});
+        document.querySelectorAll('.btn-save').forEach(b=>{b.classList.add('btn-loading');});
         adminConfig.appName=document.getElementById('appName').value.trim();
         adminConfig.appSubtitle=document.getElementById('appSubtitle').value.trim();
         adminConfig.footerText=document.getElementById('footerText').value.trim();
@@ -273,56 +478,50 @@
         adminConfig.enableDuplicateCheck=document.getElementById('enableDuplicateCheck').checked;
         adminConfig.maxHistoryItems=parseInt(document.getElementById('maxHistoryItems').value)||50;
         const np=document.getElementById('newPassword').value.trim();if(np)adminConfig.adminPassword=np;
-        // কন্টেন্ট সংগ্রহ
         adminConfig.contactContent={email:document.getElementById('contactEmail').value.trim(),phone:document.getElementById('contactPhone').value.trim(),address:document.getElementById('contactAddress').value.trim()};
         adminConfig.aboutContent={title:document.getElementById('aboutTitle').value.trim(),desc:document.getElementById('aboutDesc').value.trim(),developer:document.getElementById('aboutDeveloper').value.trim(),version:document.getElementById('aboutVersion').value.trim()};
         adminConfig.privacyContent={updated:document.getElementById('privacyUpdated').value.trim(),content:document.getElementById('privacyContent').value.trim()};
         adminConfig.adScripts={propeller:document.getElementById('propellerScript').value.trim(),adsterra:document.getElementById('adsterraScript').value.trim(),monetag:document.getElementById('monetagScript').value.trim(),clickadu:document.getElementById('clickaduScript').value.trim()};
-        adminConfig.ads=adminConfig.ads.map(ad=>({...ad,type:document.querySelector(`.ad-type[data-id="${ad.id}"]`).value,enabled:document.querySelector(`.ad-enabled[data-id="${ad.id}"]`).value==='true',content:document.querySelector(`.ad-content[data-id="${ad.id}"]`).value,link:document.querySelector(`.ad-link[data-id="${ad.id}"]`).value,fallback:document.querySelector(`.ad-fallback[data-id="${ad.id}"]`).value}));
-        collectStudyLinksFromUI();
+        collectAdValues();collectStudyLinks();
 
-        const configForFirestore = { ...adminConfig };
-        delete configForFirestore.adminPassword;
-
-        let savedToFirebase=false;
-        if(isFirebaseConnected){try{await db.collection('adminConfig').doc('globalConfig').set(configForFirestore);savedToFirebase=true;}catch(e){}}
+        const configForFirestore={...adminConfig};delete configForFirestore.adminPassword;
+        let saved=false;
+        if(isFirebaseConnected){try{await db.collection('adminConfig').doc('globalConfig').set(configForFirestore);saved=true;}catch(e){}}
         localStorage.setItem('gpaAdminConfig',JSON.stringify(adminConfig));
-        document.getElementById('successText').textContent=savedToFirebase?'✅ Firebase ও লোকালে সংরক্ষিত':'⚠️ লোকালে সংরক্ষিত (Firebase অফলাইন)';
+        document.getElementById('successText').textContent=saved?'✅ Firebase ও লোকালে সংরক্ষিত':'⚠️ লোকালে সংরক্ষিত (Firebase অফলাইন)';
         document.getElementById('successMessage').style.display='block';
-        setTimeout(()=>document.getElementById('successMessage').style.display='none',5000);
-        document.querySelectorAll('.btn-save').forEach(b=>{b.classList.remove('btn-loading');b.innerHTML='<i class="fas fa-save"></i> সব সেভ করুন';});
+        setTimeout(()=>document.getElementById('successMessage').style.display='none',4000);
+        document.querySelectorAll('.btn-save').forEach(b=>{b.classList.remove('btn-loading');});
     }
+    window.saveLocalOnly=function(){{const np=document.getElementById('newPassword').value.trim();if(np)adminConfig.adminPassword=np;}localStorage.setItem('gpaAdminConfig',JSON.stringify(adminConfig));alert('লোকালে সেভ হয়েছে');};
+    window.resetConfig=async function(){if(!confirm('ডিফল্ট?'))return;adminConfig=JSON.parse(JSON.stringify(DEFAULT_CONFIG));if(isFirebaseConnected)try{await db.collection('adminConfig').doc('globalConfig').delete();}catch(e){}localStorage.removeItem('gpaAdminConfig');location.reload();};
 
-    async function resetConfig(){if(!confirm('ডিফল্টে ফিরবেন?'))return;adminConfig=JSON.parse(JSON.stringify(DEFAULT_CONFIG));if(isFirebaseConnected)try{await db.collection('adminConfig').doc('globalConfig').delete();}catch(e){}localStorage.removeItem('gpaAdminConfig');location.reload();}
-
-    async function verifyPassword(){
-        const email=document.getElementById('adminEmail').value.trim();
-        const pass=document.getElementById('adminPassword').value;
-        if(!email||!pass){alert('ইমেইল ও পাসওয়ার্ড দিন');return;}
-        try{await auth.signInWithEmailAndPassword(email,pass);isLoggedIn=true;switchToAdminMode();}
-        catch(e){if(pass===adminConfig.adminPassword){isLoggedIn=true;switchToAdminMode();}else{alert('ভুল পাসওয়ার্ড');}}
-    }
-
+    // Auth
+    window.verifyPassword=async function(){
+        const email=document.getElementById('adminEmail').value.trim(),pass=document.getElementById('adminPassword').value;
+        if(!email||!pass)return alert('ইমেইল ও পাসওয়ার্ড দিন');
+        try{await auth.signInWithEmailAndPassword(email,pass);switchToAdminMode();}catch(e){if(pass===adminConfig.adminPassword)switchToAdminMode();else alert('ভুল পাসওয়ার্ড');}
+    };
     function switchToAdminMode(){
         document.body.classList.remove('login-mode');document.body.classList.add('admin-mode');
-        document.getElementById('loginScreen').style.display='none';
-        document.getElementById('adminContent').style.display='block';
+        document.getElementById('loginScreen').style.display='none';document.getElementById('adminContent').style.display='block';
         updateFirebaseStatus(isFirebaseConnected);populateForm();
-        window.history.pushState({},'','admin.html');
     }
+    window.logout=async function(){await auth.signOut();location.reload();};
 
-    async function logout(){
-        await auth.signOut();isLoggedIn=false;
-        document.body.classList.remove('admin-mode');document.body.classList.add('login-mode');
-        document.getElementById('loginScreen').style.display='block';
-        document.getElementById('adminContent').style.display='none';
-    }
+    // Tabs
+    window.switchTab=function(t){
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        document.querySelector(`.tab-btn[onclick="switchTab('${t}')"]`).classList.add('active');
+        document.getElementById(`tab-${t}`).classList.add('active');
+    };
 
-    (async function init(){
+    // Init
+    (async function(){
         await loadConfig();
-        const user=auth.currentUser||(await new Promise(r=>auth.onAuthStateChanged(r)));
-        if(user){isLoggedIn=true;switchToAdminMode();}else{document.body.classList.add('login-mode');}
-        setInterval(async()=>{try{await db.collection('adminConfig').doc('globalConfig').get();isFirebaseConnected=true;}catch(e){isFirebaseConnected=false;}updateFirebaseStatus(isFirebaseConnected);},10000);
+        auth.onAuthStateChanged(u=>{if(u)switchToAdminMode();});
+        if(auth.currentUser)switchToAdminMode();
     })();
 </script>
 </body>
