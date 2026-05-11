@@ -6,16 +6,16 @@
   <title>All Result BD | সকল শ্রেণীর রেজাল্ট</title>
   <meta name="description" content="PSC, JSC, SSC, HSC, অনার্স, মাস্টার্স সহ সকল শ্রেণীর GPA ক্যালকুলেটর। বাংলাদেশের গ্রেডিং সিস্টেম অনুযায়ী সঠিক GPA হিসাব করুন।" />
 
-  <!-- PWA Meta Tags -->
+  <!-- PWA মেটা -->
   <meta name="theme-color" content="#2563eb" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="GPA BD" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'><rect width='192' height='192' rx='48' fill='%232563eb'/><text x='96' y='130' text-anchor='middle' font-size='90' font-weight='bold' fill='white' font-family='sans-serif'>G</text></svg>" />
+  <link rel="apple-touch-icon" href="apple-icon.png" />
 
-  <!-- Manifest -->
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFsbCBSZXN1bHQgQkQiLAogICJzaG9ydF9uYW1lIjogIkdQQSBCRCIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzI1NjNlYiIsCiAgInRoZW1lX2NvbG9yIjogIiMyNTYzZWIiLAogICJkZXNjcmlwdGlvbiI6ICJQU0MsIEpTQywgU1NDLCBIU0MsIOKAn+KNkeCmoeCnjeCmleCnh+CmsCDigJ/ijaTgp43gpqbgp4fgpr3gpr7gp4cg4KeN4Kaw4Ka+IOCmueCnjeCmlSDgp4fgprjgpr/gprjgpr4gR1BBIOClg+CmreCmvuCnnOCmueCmvuClp+CmsCDgpLDgp43gpqzgpr7gprDgpo8uIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB3aWR0aD0nMTkyJyBoZWlnaHQ9JzE5Micgdmlld0JveD0nMCAwIDE5MiAxOTInPjxyZWN0IHdpZHRoPScxOTInIGhlaWdodD0nMTkyJyByeD0nNDgnIGZpbGw9JyMyNTYzZWInLz48dGV4dCB4PSc5NicgeT0nMTMwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LXNpemU9JzkwJyBmb250LXdlaWdodD0nYm9sZCcgZmlsbD0nd2hpdGUnIGZvbnQtZmFtaWx5PSdzYW5zLXNlcmlmJz5HPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgdmlld0JveD0nMCAwIDUxMiA1MTInPjxyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTI4JyBmaWxsPScjMjU2M2ViJy8+PHRleHQgeD0nMjU2JyB5PSczNTAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZvbnQtc2l6ZT0nMjQwJyBmb250LXdlaWdodD0nYm9sZCcgZmlsbD0nd2hpdGUnIGZvbnQtZmFtaWx5PSdzYW5zLXNlcmlmJz5HPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=" />
+  <!-- PWA ম্যানিফেস্ট (আলাদা ফাইল) -->
+  <link rel="manifest" href="manifest.json" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -163,7 +163,6 @@
     footer { text-align:center; color:#64748b; font-size:0.9rem; margin-top:16px; }
     footer a { color:#2563eb; text-decoration:none; margin:0 8px; font-weight:500; }
     footer a:hover { text-decoration:underline; }
-
     .modal-overlay {
       position:fixed; top:0; left:0; width:100%; height:100%;
       background:rgba(0,0,0,0.6); backdrop-filter:blur(6px);
@@ -180,8 +179,6 @@
     @keyframes modalIn { from{opacity:0; transform:scale(0.9);} to{opacity:1; transform:scale(1);} }
     .modal-box h2 { font-size:1.6rem; margin-bottom:16px; color:#2563eb; }
     body.dark .modal-box h2 { color:#60a5fa; }
-    .modal-box p, .modal-box li { margin-bottom:10px; line-height:1.6; color:#334155; }
-    body.dark .modal-box p, body.dark .modal-box li { color:#cbd5e1; }
     .modal-close {
       background:#e2e8f0; border:none; border-radius:50%; width:36px; height:36px;
       font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
@@ -189,22 +186,6 @@
     }
     .modal-close:hover { background:#cbd5e1; }
     body.dark .modal-close { background:#334155; color:white; }
-    body.dark .modal-close:hover { background:#475569; }
-
-    .info-section {
-      background:rgba(255,255,255,0.8); backdrop-filter:blur(18px);
-      border-radius:24px; padding:20px; margin-bottom:8px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.05),0 0 0 1px rgba(255,255,255,0.5);
-    }
-    body.dark .info-section { background:rgba(30,41,59,0.7); box-shadow:0 10px 25px rgba(0,0,0,0.3),0 0 0 1px rgba(71,85,105,0.4); }
-    .info-section h2 { color:#2563eb; margin-bottom:10px; font-size:1.2rem; }
-    body.dark .info-section h2 { color:#60a5fa; }
-    .info-section p, .info-section ul { color:#475569; line-height:1.6; margin-bottom:10px; }
-    body.dark .info-section p, body.dark .info-section ul { color:#94a3b8; }
-    .info-section ul { padding-left:20px; }
-    .info-section ul li { margin-bottom:6px; }
-
-    /* PWA install banner */
     .pwa-install-banner {
       position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
       background:#2563eb; color:white; padding:12px 24px; border-radius:50px;
@@ -213,7 +194,6 @@
     }
     .pwa-install-banner.show { display:flex; animation:fadeInUp 0.4s ease; }
     @keyframes fadeInUp { from{opacity:0;transform:translate(-50%,20px);} to{opacity:1;transform:translate(-50%,0);} }
-
     @media (max-width:500px) {
       .subject-row { flex-wrap:wrap; } .btn { padding:12px; } .header { flex-direction:column; align-items:flex-start; } .header-actions { align-self:flex-end; } .option-row { flex-direction:column; align-items:flex-start; } .student-info-grid { grid-template-columns:1fr; }
     }
@@ -309,7 +289,7 @@
     <i class="fas fa-download"></i> অ্যাপটি ইনস্টল করুন
   </div>
 
-  <!-- Modals -->
+  <!-- Modals (content unchanged, just structure) -->
   <div class="modal-overlay" id="privacyModal">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('privacyModal')">&times;</button>
@@ -318,7 +298,6 @@
       <div id="privacyContent">Privacy Policy-এর সম্পূর্ণ বিবরণ...</div>
     </div>
   </div>
-
   <div class="modal-overlay" id="aboutModal">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('aboutModal')">&times;</button>
@@ -328,7 +307,6 @@
       <p id="aboutVersion"></p>
     </div>
   </div>
-
   <div class="modal-overlay" id="contactModal">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('contactModal')">&times;</button>
@@ -338,8 +316,8 @@
     </div>
   </div>
 
-  <!-- Firebase Config -->
   <script>
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDNKVhE-a9-C_YHf5R-lhwsidcirvpacG8",
       authDomain: "all-result-27c50.firebaseapp.com",
@@ -351,65 +329,21 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-  </script>
 
-  <script>
-    // ========== PWA & Service Worker Registration ==========
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
-      const swCode = `
-        const CACHE_NAME = 'gpa-calc-v2';
-        const urlsToCache = [
-          '/',
-          'index.html',
-          'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
-          'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
-          'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js'
-        ];
-
-        self.addEventListener('install', event => {
-          event.waitUntil(
-            caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache).catch(e => console.log('Cache addAll error:', e)))
-          );
-          self.skipWaiting();
-        });
-
-        self.addEventListener('activate', event => {
-          event.waitUntil(
-            caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
-          );
-          self.clients.claim();
-        });
-
-        self.addEventListener('fetch', event => {
-          if (event.request.method !== 'GET') return;
-          event.respondWith(
-            caches.match(event.request).then(cached => {
-              const fetchPromise = fetch(event.request).then(response => {
-                if (!response || response.status !== 200 || response.type !== 'basic') return response;
-                const responseClone = response.clone();
-                caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-                return response;
-              }).catch(() => cached || new Response('<html><body style="font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;background:#f0f4ff;"><div style="text-align:center;"><h1>অফলাইন</h1><p>ইন্টারনেট সংযোগ নেই। GPA ক্যালকুলেটর ব্যবহার করতে সংযোগ প্রয়োজন।</p></div></body></html>', {headers: {'Content-Type': 'text/html'}}));
-              return cached || fetchPromise;
-            })
-          );
-        });
-      `;
-      const blob = new Blob([swCode], { type: 'application/javascript' });
-      const swUrl = URL.createObjectURL(blob);
-      navigator.serviceWorker.register(swUrl)
+      navigator.serviceWorker.register('/sw.js')
         .then(reg => console.log('SW registered'))
         .catch(err => console.warn('SW registration failed:', err));
     }
 
-    // ========== PWA Install Prompt ==========
+    // PWA Install
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       document.getElementById('pwaInstallBanner').classList.add('show');
     });
-
     window.installPWA = function() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -419,12 +353,11 @@
         });
       }
     };
-
     window.addEventListener('appinstalled', () => {
       document.getElementById('pwaInstallBanner').classList.remove('show');
     });
 
-    // ========== All previous JavaScript (unchanged logic) ==========
+    // All original JavaScript (unchanged logic, same as before)
     const DEFAULT_CONFIG = {
       appName: 'GPA Calculator BD',
       appSubtitle: 'সকল শ্রেণীর রেজাল্ট ক্যালকুলেটর',
